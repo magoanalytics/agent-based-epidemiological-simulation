@@ -113,9 +113,9 @@ ticks
 
 BUTTON
 0
-166
+143
 66
-199
+176
 Setup
 setup
 NIL
@@ -145,9 +145,9 @@ HORIZONTAL
 
 BUTTON
 67
-166
+143
 130
-199
+176
 Run
 go
 T
@@ -177,9 +177,9 @@ HORIZONTAL
 
 PLOT
 0
-201
+178
 357
-431
+408
 Population Partitioned by Health Status
 time
 Partition Count
@@ -188,17 +188,17 @@ Partition Count
 0.0
 10.0
 true
-false
+true
 "" ""
 PENS
-"default" 1.0 0 -8053223 true "" "plot count turtles with [infected? = true]"
-"pen-1" 1.0 0 -15575016 true "" "plot count turtles with [infected? = false]"
+"infected" 1.0 0 -8053223 true "" "plot count turtles with [infected?]"
+"recovered" 1.0 0 -15575016 true "" "plot count turtles with [recovered?]"
 
 MONITOR
 357
-201
+178
 426
-246
+223
 infected 
 count turtles with [infected?]
 0
@@ -234,6 +234,25 @@ average-recovery-time
 1
 NIL
 HORIZONTAL
+
+PLOT
+0
+409
+357
+619
+Rate of Spread and Recovery
+time (hours)
+Rate 
+0.0
+10.0
+0.0
+1.0
+true
+true
+"" ""
+PENS
+"infected" 1.0 0 -10873583 true "" "plot (count turtles with [infected?]) / count turtles"
+"recoverde" 1.0 0 -14333415 true "" "plot (count turtles with [recovered?]) / count turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
