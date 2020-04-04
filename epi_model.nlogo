@@ -1,3 +1,7 @@
+globals [
+  death-count
+]
+
 turtles-own [
   susceptibility
   infected?
@@ -5,6 +9,7 @@ turtles-own [
   infected-duration
   recovery-rate
   recovery-time
+  death-rate
 ]
 
 patches-own [
@@ -32,8 +37,13 @@ to initialize-population
     set recovery-rate random-normal average-recovery-rate (average-recovery-rate / 5)
     if recovery-rate > 100 [set recovery-rate 100]
     if recovery-rate < 0 [set recovery-rate 10]
+
+    set death-rate random-normal average-death-rate (average-death-rate / 5)
+    if death-rate < 0 [set death-rate 0]
   ]
   ask n-of initial-infected turtles [set color red set infected? True]
+
+  set death-count 0
 end
 
 to initialized-border
@@ -67,6 +77,13 @@ to infect
   ]
 end
 
+to die-infected
+  if random-float 100 < death-rate [
+    set death-count death-count + 1
+    die
+  ]
+end
+
 to recover
   set infected-duration infected-duration + 1
 
@@ -92,6 +109,7 @@ to go
   ask turtles [move]
   ask turtles with [infected?] [
     infect
+    die-infected
     recover
   ]
   tick
@@ -288,6 +306,32 @@ lockdown?
 0
 1
 -1000
+
+SLIDER
+190
+76
+368
+109
+average-death-rate
+average-death-rate
+0
+1
+0.1
+0.01
+1
+NIL
+HORIZONTAL
+
+MONITOR
+357
+234
+436
+279
+death count
+death-count
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
