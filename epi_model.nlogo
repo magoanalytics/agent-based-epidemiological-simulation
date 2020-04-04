@@ -37,8 +37,8 @@ to initialize-population
 end
 
 to initialized-border
-  ask patches with [pxcor = 0] [
-    set pcolor yellow
+  ask patches with [(pxcor >= -1 and pxcor <= 1) or (pycor >= -1 and pycor <= 1)] [
+    set pcolor 42
     set border? true
   ]
 end
@@ -48,7 +48,7 @@ to move
   let patch-in-front patch-ahead 1
 
   if patch-in-front != nobody [
-    ifelse [pcolor] of patch-in-front = yellow
+    ifelse [pcolor] of patch-in-front = 42
     [rt 180 fd 1]
     [fd 1]
   ]
@@ -195,7 +195,7 @@ PLOT
 357
 419
 Population Partitioned by Health Status
-time
+time (hours)
 Partition Count
 0.0
 10.0
@@ -262,7 +262,7 @@ initial-infected
 initial-infected
 1
 10
-1.0
+5.0
 1
 1
 NIL
@@ -279,10 +279,10 @@ average-recovery-time
 1
 
 SWITCH
-256
-109
-377
-142
+190
+43
+311
+76
 lockdown?
 lockdown?
 0
