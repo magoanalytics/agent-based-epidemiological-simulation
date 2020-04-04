@@ -7,13 +7,17 @@ turtles-own [
   recovery-time
 ]
 
+patches-own [
+  border?
+]
+
 to initialize-population
   create-turtles initial-population [
     setxy random-xcor random-ycor
     set shape "person"
     set color green
 
-    set susceptibility random-normal average-susceptibility average-susceptibility / 4
+    set susceptibility random-normal average-susceptibility (average-susceptibility / 5)
     if susceptibility > 100 [set susceptibility 100]
     if susceptibility < 0 [set susceptibility 0]
 
@@ -21,21 +25,19 @@ to initialize-population
     set recovered? false
     set infected-duration 0
 
-;    set recovery-rate random-normal average-recovery-rate average-recovery-rate / 4
-;    if recovery-rate > 100 [set recovery-rate 100]
-;    if recovery-rate < 0 [set recovery-rate 10]
-
-
-    set recovery-time random-normal average-recovery-time average-recovery-time / 4
-    if recovery-time > 2 * average-recovery-time [set recovery-time 2 * average-recovery-time]
+    set recovery-time random-normal average-recovery-time (7 * 24)
+    if recovery-time > ((average-recovery-time) + (3 * 7 * 24)) [set recovery-time ((average-recovery-time) + (3 * 7 * 24))]
     if recovery-time < 0 [set recovery-time 0]
 
-    ; introduce a 5% chance of being infected in the initial population
-    if random 100 < 5 [
-      set color red
-      set infected? true
-    ]
+    set recovery-rate random-normal average-recovery-rate (average-recovery-rate / 5)
+    if recovery-rate > 100 [set recovery-rate 100]
+    if recovery-rate < 0 [set recovery-rate 10]
   ]
+  ask n-of initial-infected turtles [set color red set infected? True]
+end
+
+to initialized-border
+  ask patches with [pxcor = 0] [set pcolor yellow]
 end
 
 to move
@@ -44,7 +46,7 @@ to move
 end
 
 to infect
-  let nearby-neighbors (turtles-on neighbors) with [not infected? and not recovered?]
+  let nearby-neighbors turtles in-radius 1 with [not infected? and not recovered?]
 
   if nearby-neighbors != nobody [
     ask nearby-neighbors [
@@ -60,7 +62,7 @@ to recover
   set infected-duration infected-duration + 1
 
   if infected-duration >= recovery-time [
-    if random-float 100 < average-recovery-rate [
+    if random-float 100 < recovery-rate [
       set color blue
       set infected? false
       set recovered? true
@@ -68,9 +70,11 @@ to recover
   ]
 end
 
+;==========================================================
 to setup
   clear-all
   initialize-population
+  initialized-border
   reset-ticks
 end
 
@@ -83,15 +87,16 @@ to go
   ]
   tick
 end
+;==========================================================
 @#$#@#$#@
 GRAPHICS-WINDOW
-508
+452
 10
-1100
-603
+1058
+617
 -1
 -1
-23.36
+2.98
 1
 10
 1
@@ -101,10 +106,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--12
-12
--12
-12
+-100
+100
+-100
+100
 1
 1
 1
@@ -113,9 +118,9 @@ ticks
 
 BUTTON
 0
-143
+154
 66
-176
+187
 Setup
 setup
 NIL
@@ -136,8 +141,8 @@ SLIDER
 initial-population
 initial-population
 10
-100
-100.0
+1000
+1000.0
 1
 1
 NIL
@@ -145,9 +150,9 @@ HORIZONTAL
 
 BUTTON
 67
-143
+154
 130
-176
+187
 Run
 go
 T
@@ -169,7 +174,7 @@ average-susceptibility
 average-susceptibility
 0
 100
-70.0
+17.0
 1
 1
 NIL
@@ -177,9 +182,9 @@ HORIZONTAL
 
 PLOT
 0
-178
+189
 357
-408
+419
 Population Partitioned by Health Status
 time
 Partition Count
@@ -196,10 +201,10 @@ PENS
 
 MONITOR
 357
-178
-426
-223
-infected 
+189
+436
+234
+active cases 
 count turtles with [infected?]
 0
 1
@@ -214,22 +219,7 @@ average-recovery-rate
 average-recovery-rate
 0
 100
-31.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-0
-109
-190
-142
-average-recovery-time
-average-recovery-time
-0
-500
-163.0
+86.0
 1
 1
 NIL
@@ -237,9 +227,9 @@ HORIZONTAL
 
 PLOT
 0
-409
+420
 357
-619
+630
 Rate of Spread and Recovery
 time (hours)
 Rate 
@@ -253,6 +243,31 @@ true
 PENS
 "infected" 1.0 0 -10873583 true "" "plot (count turtles with [infected?]) / count turtles"
 "recoverde" 1.0 0 -14333415 true "" "plot (count turtles with [recovered?]) / count turtles"
+
+SLIDER
+190
+10
+362
+43
+initial-infected
+initial-infected
+1
+10
+5.0
+1
+1
+NIL
+HORIZONTAL
+
+CHOOSER
+0
+109
+189
+154
+average-recovery-time
+average-recovery-time
+336 504 672
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
