@@ -37,12 +37,21 @@ to initialize-population
 end
 
 to initialized-border
-  ask patches with [pxcor = 0] [set pcolor yellow]
+  ask patches with [pxcor = 0] [
+    set pcolor yellow
+    set border? true
+  ]
 end
 
 to move
   rt random-float 360
-  fd 1
+  let patch-in-front patch-ahead 1
+
+  if patch-in-front != nobody [
+    ifelse [pcolor] of patch-in-front = yellow
+    [rt 180 fd 1]
+    [fd 1]
+  ]
 end
 
 to infect
@@ -74,7 +83,7 @@ end
 to setup
   clear-all
   initialize-population
-  initialized-border
+  if lockdown? = true [initialized-border]
   reset-ticks
 end
 
@@ -141,8 +150,8 @@ SLIDER
 initial-population
 initial-population
 10
-1000
-1000.0
+2000
+2000.0
 1
 1
 NIL
@@ -253,7 +262,7 @@ initial-infected
 initial-infected
 1
 10
-5.0
+1.0
 1
 1
 NIL
@@ -268,6 +277,17 @@ average-recovery-time
 average-recovery-time
 336 504 672
 1
+
+SWITCH
+256
+109
+377
+142
+lockdown?
+lockdown?
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
