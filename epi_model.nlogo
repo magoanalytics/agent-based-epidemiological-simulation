@@ -38,7 +38,7 @@ end
 
 to initialized-border
   ask patches with [(pxcor >= -1 and pxcor <= 1) or (pycor >= -1 and pycor <= 1)] [
-    set pcolor 42
+    set pcolor 41
     set border? true
   ]
 end
@@ -48,7 +48,7 @@ to move
   let patch-in-front patch-ahead 1
 
   if patch-in-front != nobody [
-    ifelse [pcolor] of patch-in-front = 42
+    ifelse [pcolor] of patch-in-front = 41
     [rt 180 fd 1]
     [fd 1]
   ]
