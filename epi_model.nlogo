@@ -55,13 +55,15 @@ end
 
 to move
   rt random-float 360
-  let patch-in-front patch-ahead 1
-
-  if patch-in-front != nobody [
-    ifelse [pcolor] of patch-in-front = 41
-    [rt 180 fd 1]
-    [fd 1]
+  ifelse lockdown? = True [
+    let patch-in-front patch-ahead 1
+    if patch-in-front != nobody [
+      ifelse [pcolor] of patch-in-front = 41 and random 100 <= lockdown-intensity
+      [rt 180 fd 1]
+      [fd 1]
+    ]
   ]
+  [fd 1]
 end
 
 to infect
@@ -240,7 +242,7 @@ count turtles with [infected?]
 SLIDER
 0
 76
-190
+189
 109
 average-recovery-rate
 average-recovery-rate
@@ -299,19 +301,19 @@ average-recovery-time
 SWITCH
 190
 43
-311
+300
 76
 lockdown?
 lockdown?
-0
+1
 1
 -1000
 
 SLIDER
-190
-76
-368
-109
+189
+89
+367
+122
 average-death-rate
 average-death-rate
 0
@@ -335,9 +337,9 @@ death-count
 
 SLIDER
 189
-109
+121
 361
-142
+154
 quarantine-delay
 quarantine-delay
 1
@@ -347,6 +349,16 @@ quarantine-delay
 1
 NIL
 HORIZONTAL
+
+CHOOSER
+300
+43
+413
+88
+lockdown-intensity
+lockdown-intensity
+100 90 80
+2
 
 @#$#@#$#@
 ## WHAT IS IT?
