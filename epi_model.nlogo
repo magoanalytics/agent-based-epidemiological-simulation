@@ -333,6 +333,21 @@ death-count
 1
 11
 
+SLIDER
+189
+109
+361
+142
+quarantine-delay
+quarantine-delay
+1
+7
+1.0
+1
+1
+NIL
+HORIZONTAL
+
 @#$#@#$#@
 ## WHAT IS IT?
 
