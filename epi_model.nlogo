@@ -14,11 +14,29 @@ turtles-own [
 
 patches-own [
   border?
+  quarantine?
 ]
+
+to initialized-patches
+  ask patches [set quarantine? false]
+  ask patches with [(pxcor = 0 and pycor = 0) or (pxcor = 1 and pycor = 1) or (pxcor = -1 and pycor = -1) or (pxcor = -1 and pycor = 1) or (pxcor = 1 and pycor = -1) or
+                    (pxcor = 0 and pycor = 1) or (pxcor = 0 and pycor = -1) or (pxcor = 1 and pycor = 0) or (pxcor = -1 and pycor = 0)] [
+    set pcolor 48
+    set quarantine? true
+  ]
+
+  ask patches [set border? false]
+  ask patches with [((pxcor >= -1 and pxcor <= 1) or (pycor >= -1 and pycor <= 1) or (pxcor >= (- (max-pxcor * 0.5) - 1) and pxcor <= (- (max-pxcor * 0.5) + 1)) or
+                    (pxcor >= ((max-pxcor * 0.5) - 1) and pxcor <= ((max-pxcor * 0.5) + 1)) or (pycor >= (- (max-pycor * 0.5) - 1) and pycor <= (- (max-pycor * 0.5) + 1)) or
+                    (pycor >= ((max-pycor * 0.5) - 1) and pycor <= ((max-pycor * 0.5) + 1))) and not quarantine?] [
+    set pcolor 41
+    set border? true
+  ]
+end
 
 to initialize-population
   create-turtles initial-population [
-    setxy random-xcor random-ycor
+    move-to one-of patches with [border? = false and quarantine? = false]
     set shape "person"
     set color green
 
@@ -46,24 +64,14 @@ to initialize-population
   set death-count 0
 end
 
-to initialized-border
-  ask patches with [(pxcor >= -1 and pxcor <= 1) or (pycor >= -1 and pycor <= 1)] [
-    set pcolor 41
-    set border? true
-  ]
-end
-
 to move
   rt random-float 360
-  ifelse lockdown? = True [
-    let patch-in-front patch-ahead 1
-    if patch-in-front != nobody [
-      ifelse [pcolor] of patch-in-front = 41 and random 100 <= lockdown-intensity
-      [rt 180 fd 1]
-      [fd 1]
-    ]
+  let patch-in-front patch-ahead 1
+  if patch-in-front != nobody [
+    ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
+    [rt 180 fd 1]
+    [fd 1]
   ]
-  [fd 1]
 end
 
 to infect
@@ -101,8 +109,8 @@ end
 ;==========================================================
 to setup
   clear-all
+  initialized-patches
   initialize-population
-  if lockdown? = true [initialized-border]
   reset-ticks
 end
 
@@ -225,8 +233,8 @@ true
 true
 "" ""
 PENS
-"infected" 1.0 0 -8053223 true "" "plot count turtles with [infected?]"
-"recovered" 1.0 0 -15575016 true "" "plot count turtles with [recovered?]"
+"infected" 1.0 0 -2674135 true "" "plot count turtles with [infected?]"
+"recovered" 1.0 0 -13345367 true "" "plot count turtles with [recovered?]"
 
 MONITOR
 357
@@ -282,7 +290,7 @@ initial-infected
 initial-infected
 1
 10
-5.0
+10.0
 1
 1
 NIL
@@ -298,22 +306,11 @@ average-recovery-time
 336 504 672
 1
 
-SWITCH
-190
-43
-300
-76
-lockdown?
-lockdown?
-1
-1
--1000
-
 SLIDER
 189
-89
+76
 367
-122
+109
 average-death-rate
 average-death-rate
 0
@@ -337,9 +334,9 @@ death-count
 
 SLIDER
 189
-121
+108
 361
-154
+141
 quarantine-delay
 quarantine-delay
 1
@@ -350,15 +347,20 @@ quarantine-delay
 NIL
 HORIZONTAL
 
-CHOOSER
-300
+SLIDER
+190
 43
-413
-88
+351
+76
 lockdown-intensity
 lockdown-intensity
-100 90 80
-2
+0
+100
+0.0
+0.1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
