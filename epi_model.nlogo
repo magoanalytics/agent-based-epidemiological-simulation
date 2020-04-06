@@ -1,4 +1,5 @@
 globals [
+  quarantined-count
   death-count
 ]
 
@@ -10,6 +11,7 @@ turtles-own [
   recovery-rate
   recovery-time
   death-rate
+  quarantined?
 ]
 
 patches-own [
@@ -18,6 +20,7 @@ patches-own [
 ]
 
 to initialized-patches
+  ; define quarantine patchees
   ask patches [set quarantine? false]
   ask patches with [(pxcor = 0 and pycor = 0) or (pxcor = 1 and pycor = 1) or (pxcor = -1 and pycor = -1) or (pxcor = -1 and pycor = 1) or (pxcor = 1 and pycor = -1) or
                     (pxcor = 0 and pycor = 1) or (pxcor = 0 and pycor = -1) or (pxcor = 1 and pycor = 0) or (pxcor = -1 and pycor = 0)] [
@@ -25,6 +28,7 @@ to initialized-patches
     set quarantine? true
   ]
 
+  ; define border patches
   ask patches [set border? false]
   ask patches with [((pxcor >= -1 and pxcor <= 1) or (pycor >= -1 and pycor <= 1) or (pxcor >= (- (max-pxcor * 0.5) - 1) and pxcor <= (- (max-pxcor * 0.5) + 1)) or
                     (pxcor >= ((max-pxcor * 0.5) - 1) and pxcor <= ((max-pxcor * 0.5) + 1)) or (pycor >= (- (max-pycor * 0.5) - 1) and pycor <= (- (max-pycor * 0.5) + 1)) or
@@ -46,6 +50,7 @@ to initialize-population
 
     set infected? false
     set recovered? false
+    set quarantined? false
     set infected-duration 0
 
     set recovery-time random-normal average-recovery-time (7 * 24)
@@ -60,7 +65,7 @@ to initialize-population
     if death-rate < 0 [set death-rate 0]
   ]
   ask n-of initial-infected turtles [set color red set infected? True]
-
+  set quarantined-count 0
   set death-count 0
 end
 
@@ -74,10 +79,18 @@ to move
   ]
 end
 
+to quarantine
+  if random 100 <= mass-testing-intensity and ticks mod (quarantine-delay * 24) = 0 and ticks != 0 and ([quarantined?] of self = false)[
+    set quarantined-count quarantined-count + 1
+    move-to one-of patches with [quarantine? = true]
+    set quarantined? true
+  ]
+end
+
 to infect
   let nearby-neighbors turtles in-radius 1 with [not infected? and not recovered?]
 
-  if nearby-neighbors != nobody [
+  if ([quarantined?] of self = false) and nearby-neighbors != nobody[
     ask nearby-neighbors [
       if random 100 < susceptibility [
         set color red
@@ -115,9 +128,10 @@ to setup
 end
 
 to go
-  if count turtles with [infected?] = 0 [stop]
-  ask turtles [move]
+  if count turtles with [infected? = true] = 0 [stop]
+  ask turtles with [quarantined? = false] [move]
   ask turtles with [infected?] [
+    quarantine
     infect
     die-infected
     recover
@@ -127,13 +141,13 @@ end
 ;==========================================================
 @#$#@#$#@
 GRAPHICS-WINDOW
-452
+468
 10
-1058
-617
+974
+517
 -1
 -1
-2.98
+2.48
 1
 10
 1
@@ -178,8 +192,8 @@ SLIDER
 initial-population
 initial-population
 10
-2000
-2000.0
+5000
+5000.0
 1
 1
 NIL
@@ -211,7 +225,7 @@ average-susceptibility
 average-susceptibility
 0
 100
-17.0
+100.0
 1
 1
 NIL
@@ -290,7 +304,7 @@ initial-infected
 initial-infected
 1
 10
-10.0
+1.0
 1
 1
 NIL
@@ -315,7 +329,7 @@ average-death-rate
 average-death-rate
 0
 1
-0.1
+0.0
 0.01
 1
 NIL
@@ -356,11 +370,37 @@ lockdown-intensity
 lockdown-intensity
 0
 100
-0.0
+38.4
 0.1
 1
 NIL
 HORIZONTAL
+
+SLIDER
+189
+140
+361
+173
+mass-testing-intensity
+mass-testing-intensity
+0
+100
+32.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+357
+279
+468
+324
+quarantined count
+quarantined-count
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
