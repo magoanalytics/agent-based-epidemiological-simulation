@@ -12,6 +12,8 @@ turtles-own [
   recovery-time
   death-rate
   quarantined?
+
+  nearest-distance
 ]
 
 patches-own [
@@ -63,6 +65,8 @@ to initialize-population
 
     set death-rate random-normal average-death-rate (average-death-rate / 5)
     if death-rate < 0 [set death-rate 0]
+
+    set nearest-distance 0
   ]
   ask n-of initial-infected turtles [set color red set infected? True]
   set quarantined-count 0
@@ -70,17 +74,39 @@ to initialize-population
 end
 
 to move
-  rt random-float 360
+  let nearest-neighbor min-one-of (other turtles in-radius 2) [distance myself]
   let patch-in-front patch-ahead 1
-  if patch-in-front != nobody [
+  ifelse random 100 < social-distancing-intensity [
+    ifelse nearest-neighbor != nobody [
+      face nearest-neighbor
+      rt 180
+      if patch-in-front != nobody [
+        ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
+        [rt 180 fd 0.5]
+        [fd 0.5]
+      ]
+    ]
+    [
+        rt random-float 360
+        if patch-in-front != nobody [
+        ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
+        [rt 180 fd 0.5]
+        [fd 0.5]
+      ]
+    ]
+  ]
+  [
+    rt random-float 360
+    if patch-in-front != nobody [
     ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
     [rt 180 fd 1]
     [fd 1]
+    ]
   ]
 end
 
 to quarantine
-  if random 100 <= mass-testing-intensity and ticks mod (quarantine-delay * 24) = 0 and ticks != 0 and ([quarantined?] of self = false)[
+  if random 100 < mass-testing-intensity and ticks mod (quarantine-delay * 24) = 0 and ticks != 0 and ([quarantined?] of self = false)[
     set quarantined-count quarantined-count + 1
     move-to one-of patches with [quarantine? = true]
     set quarantined? true
@@ -370,7 +396,7 @@ lockdown-intensity
 lockdown-intensity
 0
 100
-100.0
+0.0
 0.1
 1
 NIL
@@ -385,7 +411,7 @@ mass-testing-intensity
 mass-testing-intensity
 0
 100
-32.0
+0.0
 1
 1
 NIL
@@ -411,7 +437,7 @@ social-distancing-intensity
 social-distancing-intensity
 0
 100
-50.0
+100.0
 1
 1
 NIL
