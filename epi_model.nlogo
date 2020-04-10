@@ -233,9 +233,9 @@ HORIZONTAL
 
 PLOT
 0
-189
+206
 357
-419
+436
 Population Partitioned by Health Status
 time (hours)
 Partition Count
@@ -252,9 +252,9 @@ PENS
 
 MONITOR
 357
-189
+206
 436
-234
+251
 active cases 
 count turtles with [infected?]
 0
@@ -278,9 +278,9 @@ HORIZONTAL
 
 PLOT
 0
-420
+437
 357
-630
+647
 Rate of Spread and Recovery
 time (hours)
 Rate 
@@ -337,9 +337,9 @@ HORIZONTAL
 
 MONITOR
 357
-234
+251
 436
-279
+296
 death count
 death-count
 17
@@ -370,7 +370,7 @@ lockdown-intensity
 lockdown-intensity
 0
 100
-38.4
+100.0
 0.1
 1
 NIL
@@ -393,14 +393,29 @@ HORIZONTAL
 
 MONITOR
 357
-279
+296
 468
-324
+341
 quarantined count
 quarantined-count
 17
 1
 11
+
+SLIDER
+189
+173
+378
+206
+social-distancing-intensity
+social-distancing-intensity
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
