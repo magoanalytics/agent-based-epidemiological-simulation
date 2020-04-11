@@ -22,7 +22,7 @@ patches-own [
 ]
 
 to initialized-patches
-  ; define quarantine patchees
+  ; define quarantine patches
   ask patches [set quarantine? false]
   ask patches with [(pxcor = 0 and pycor = 0) or (pxcor = 1 and pycor = 1) or (pxcor = -1 and pycor = -1) or (pxcor = -1 and pycor = 1) or (pxcor = 1 and pycor = -1) or
                     (pxcor = 0 and pycor = 1) or (pxcor = 0 and pycor = -1) or (pxcor = 1 and pycor = 0) or (pxcor = -1 and pycor = 0)] [
@@ -75,11 +75,11 @@ end
 
 to move
   let nearest-neighbor min-one-of (other turtles in-radius 2) [distance myself]
-  let patch-in-front patch-ahead 1
   ifelse random 100 < social-distancing-intensity [
     ifelse nearest-neighbor != nobody [
       face nearest-neighbor
       rt 180
+      let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
         ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
         [rt 180 fd 0.5]
@@ -87,8 +87,9 @@ to move
       ]
     ]
     [
-        rt random-float 360
-        if patch-in-front != nobody [
+      rt random-float 360
+      let patch-in-front patch-ahead 1
+      if patch-in-front != nobody [
         ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
         [rt 180 fd 0.5]
         [fd 0.5]
@@ -97,10 +98,11 @@ to move
   ]
   [
     rt random-float 360
+    let patch-in-front patch-ahead 1
     if patch-in-front != nobody [
-    ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
-    [rt 180 fd 1]
-    [fd 1]
+      ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
+      [rt 180 fd 1]
+      [fd 1]
     ]
   ]
 end
@@ -251,7 +253,7 @@ average-susceptibility
 average-susceptibility
 0
 100
-100.0
+29.0
 1
 1
 NIL
@@ -296,7 +298,7 @@ average-recovery-rate
 average-recovery-rate
 0
 100
-86.0
+100.0
 1
 1
 NIL
@@ -437,7 +439,7 @@ social-distancing-intensity
 social-distancing-intensity
 0
 100
-100.0
+80.0
 1
 1
 NIL
