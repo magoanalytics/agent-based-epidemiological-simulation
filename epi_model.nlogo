@@ -12,8 +12,6 @@ turtles-own [
   recovery-time
   death-rate
   quarantined?
-
-  nearest-distance
 ]
 
 patches-own [
@@ -65,8 +63,6 @@ to initialize-population
 
     set death-rate random-normal average-death-rate (average-death-rate / 5)
     if death-rate < 0 [set death-rate 0]
-
-    set nearest-distance 0
   ]
   ask n-of initial-infected turtles [set color red set infected? True]
   set quarantined-count 0
