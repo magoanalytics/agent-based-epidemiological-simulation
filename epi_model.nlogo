@@ -32,9 +32,9 @@ to initialized-patches
 
   ; define border patches
   ask patches [set border? false]
-  ask patches with [((pxcor >= -1 and pxcor <= 1) or (pycor >= -1 and pycor <= 1) or (pxcor >= (- (max-pxcor * 0.5) - 1) and pxcor <= (- (max-pxcor * 0.5) + 1)) or
-                    (pxcor >= ((max-pxcor * 0.5) - 1) and pxcor <= ((max-pxcor * 0.5) + 1)) or (pycor >= (- (max-pycor * 0.5) - 1) and pycor <= (- (max-pycor * 0.5) + 1)) or
-                    (pycor >= ((max-pycor * 0.5) - 1) and pycor <= ((max-pycor * 0.5) + 1))) and not quarantine?] [
+  ask patches with [((pxcor >= -2 and pxcor <= 2) or (pycor >= -2 and pycor <= 2) or (pxcor >= (- (max-pxcor * 0.5) - 2) and pxcor <= (- (max-pxcor * 0.5) + 2)) or
+                    (pxcor >= ((max-pxcor * 0.5) - 2) and pxcor <= ((max-pxcor * 0.5) + 2)) or (pycor >= (- (max-pycor * 0.5) - 2) and pycor <= (- (max-pycor * 0.5) + 2)) or
+                    (pycor >= ((max-pycor * 0.5) - 2) and pycor <= ((max-pycor * 0.5) + 2))) and not quarantine?] [
     set pcolor 41
     set border? true
   ]
@@ -81,7 +81,7 @@ to move
       rt 180
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
-        ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
+        ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 < lockdown-intensity
         [rt 180 fd 0.5]
         [fd 0.5]
       ]
@@ -90,7 +90,7 @@ to move
       rt random-float 360
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
-        ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
+        ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 < lockdown-intensity
         [rt 180 fd 0.5]
         [fd 0.5]
       ]
@@ -100,7 +100,7 @@ to move
     rt random-float 360
     let patch-in-front patch-ahead 1
     if patch-in-front != nobody [
-      ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 <= lockdown-intensity
+      ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 < lockdown-intensity
       [rt 180 fd 1]
       [fd 1]
     ]
@@ -116,7 +116,7 @@ to quarantine
 end
 
 to infect
-  let nearby-neighbors turtles in-radius 1 with [not infected? and not recovered?]
+  let nearby-neighbors turtles in-radius 1 with [not infected? and not recovered? and not quarantined?]
 
   if ([quarantined?] of self = false) and nearby-neighbors != nobody[
     ask nearby-neighbors [
@@ -253,7 +253,7 @@ average-susceptibility
 average-susceptibility
 0
 100
-29.0
+100.0
 1
 1
 NIL
@@ -298,7 +298,7 @@ average-recovery-rate
 average-recovery-rate
 0
 100
-100.0
+0.0
 1
 1
 NIL
@@ -346,7 +346,7 @@ CHOOSER
 average-recovery-time
 average-recovery-time
 336 504 672
-1
+2
 
 SLIDER
 189
@@ -383,7 +383,7 @@ quarantine-delay
 quarantine-delay
 1
 7
-1.0
+3.0
 1
 1
 NIL
@@ -398,7 +398,7 @@ lockdown-intensity
 lockdown-intensity
 0
 100
-0.0
+100.0
 0.1
 1
 NIL
@@ -439,7 +439,7 @@ social-distancing-intensity
 social-distancing-intensity
 0
 100
-80.0
+33.0
 1
 1
 NIL
@@ -791,6 +791,43 @@ NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles</metric>
+    <enumeratedValueSet variable="average-susceptibility">
+      <value value="29"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-infected">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-recovery-time">
+      <value value="504"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mass-testing-intensity">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-death-rate">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-recovery-rate">
+      <value value="80"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine-delay">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-population">
+      <value value="5000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="social-distancing-intensity">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="lockdown-intensity">
+      <value value="0"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
