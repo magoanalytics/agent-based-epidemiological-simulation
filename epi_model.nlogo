@@ -81,18 +81,28 @@ to move
       rt 180
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
-        ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 < lockdown-intensity
-        [rt 180 fd 0.5]
-        [fd 0.5]
+        ifelse [quarantine?] of patch-in-front = true [
+          rt 180 fd 0.5
+        ]
+        [
+          ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
+          [rt 180 fd 0.5]
+          [fd 0.5]
+        ]
       ]
     ]
     [
       rt random-float 360
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
-        ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 < lockdown-intensity
-        [rt 180 fd 0.5]
-        [fd 0.5]
+        ifelse [quarantine?] of patch-in-front = true [
+          rt 180 fd 0.5
+        ]
+        [
+          ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
+          [rt 180 fd 0.5]
+          [fd 0.5]
+        ]
       ]
     ]
   ]
@@ -100,9 +110,14 @@ to move
     rt random-float 360
     let patch-in-front patch-ahead 1
     if patch-in-front != nobody [
-      ifelse ([border?] of patch-in-front = true or [quarantine?] of patch-in-front = true) and random 100 < lockdown-intensity
-      [rt 180 fd 1]
-      [fd 1]
+      ifelse [quarantine?] of patch-in-front = true [
+        rt 180 fd 1
+      ]
+      [
+        ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
+        [rt 180 fd 1]
+        [fd 1]
+      ]
     ]
   ]
 end
@@ -164,14 +179,15 @@ to go
     die-infected
     recover
   ]
+  ask turtles-on patches with [quarantine?] [set color pink]
   tick
 end
 ;==========================================================
 @#$#@#$#@
 GRAPHICS-WINDOW
-468
+469
 10
-974
+975
 517
 -1
 -1
@@ -197,9 +213,9 @@ ticks
 
 BUTTON
 0
-154
+220
 66
-187
+253
 Setup
 setup
 NIL
@@ -215,7 +231,7 @@ NIL
 SLIDER
 0
 10
-190
+168
 43
 initial-population
 initial-population
@@ -228,10 +244,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-67
-154
-130
-187
+66
+220
+129
+253
 Run
 go
 T
@@ -246,9 +262,9 @@ NIL
 
 SLIDER
 0
-43
-190
 76
+168
+109
 average-susceptibility
 average-susceptibility
 0
@@ -261,9 +277,9 @@ HORIZONTAL
 
 PLOT
 0
-206
+253
 357
-436
+483
 Population Partitioned by Health Status
 time (hours)
 Partition Count
@@ -280,9 +296,9 @@ PENS
 
 MONITOR
 357
-206
+253
 436
-251
+298
 active cases 
 count turtles with [infected?]
 0
@@ -291,9 +307,9 @@ count turtles with [infected?]
 
 SLIDER
 0
-76
-189
 109
+168
+142
 average-recovery-rate
 average-recovery-rate
 0
@@ -306,9 +322,9 @@ HORIZONTAL
 
 PLOT
 0
-437
+484
 357
-647
+694
 Rate of Spread and Recovery
 time (hours)
 Rate 
@@ -324,10 +340,10 @@ PENS
 "recoverde" 1.0 0 -14333415 true "" "plot (count turtles with [recovered?]) / count turtles"
 
 SLIDER
-190
-10
-362
+0
 43
+168
+76
 initial-infected
 initial-infected
 1
@@ -340,24 +356,24 @@ HORIZONTAL
 
 CHOOSER
 0
-109
-189
-154
+142
+168
+187
 average-recovery-time
 average-recovery-time
 336 504 672
 2
 
 SLIDER
-189
-76
-367
-109
+0
+187
+168
+220
 average-death-rate
 average-death-rate
 0
 1
-0.0
+0.02
 0.01
 1
 NIL
@@ -365,9 +381,9 @@ HORIZONTAL
 
 MONITOR
 357
-251
+298
 436
-296
+343
 death count
 death-count
 17
@@ -375,40 +391,40 @@ death-count
 11
 
 SLIDER
-189
-108
-361
-141
+168
+10
+353
+43
 quarantine-delay
 quarantine-delay
 1
 7
-3.0
+1.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-190
-43
-351
-76
+168
+109
+353
+142
 lockdown-intensity
 lockdown-intensity
 0
 100
-100.0
+0.0
 0.1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-189
-140
-361
-173
+168
+43
+353
+76
 mass-testing-intensity
 mass-testing-intensity
 0
@@ -421,9 +437,9 @@ HORIZONTAL
 
 MONITOR
 357
-296
+343
 468
-341
+388
 quarantined count
 quarantined-count
 17
@@ -431,15 +447,15 @@ quarantined-count
 11
 
 SLIDER
-189
-173
-378
-206
+168
+76
+353
+109
 social-distancing-intensity
 social-distancing-intensity
 0
 100
-33.0
+0.0
 1
 1
 NIL
