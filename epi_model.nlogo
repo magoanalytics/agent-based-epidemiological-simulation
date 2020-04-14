@@ -12,6 +12,7 @@ turtles-own [
   recovery-time
   death-rate
   quarantined?
+  infected-others
 ]
 
 patches-own [
@@ -63,6 +64,8 @@ to initialize-population
 
     set death-rate random-normal average-death-rate (average-death-rate / 5)
     if death-rate < 0 [set death-rate 0]
+
+    set infected-others 0
   ]
   ask n-of initial-infected turtles [set color red set infected? True]
   set quarantined-count 0
@@ -134,6 +137,7 @@ to infect
       if random 100 < susceptibility [
         set color red
         set infected? true
+        ask myself [set infected-others infected-others + 1]
       ]
     ]
   ]
@@ -175,7 +179,6 @@ to go
     die-infected
     recover
   ]
-  ask turtles-on patches with [quarantine?] [set color pink]
   tick
 end
 ;==========================================================
@@ -265,7 +268,7 @@ average-susceptibility
 average-susceptibility
 0
 100
-100.0
+20.0
 1
 1
 NIL
@@ -310,7 +313,7 @@ average-recovery-rate
 average-recovery-rate
 0
 100
-0.0
+90.0
 1
 1
 NIL
@@ -358,7 +361,7 @@ CHOOSER
 average-recovery-time
 average-recovery-time
 336 504 672
-2
+1
 
 SLIDER
 0
@@ -369,7 +372,7 @@ average-death-rate
 average-death-rate
 0
 1
-0.02
+0.0
 0.01
 1
 NIL
@@ -451,11 +454,44 @@ social-distancing-intensity
 social-distancing-intensity
 0
 100
-0.0
+80.0
 1
 1
 NIL
 HORIZONTAL
+
+MONITOR
+358
+522
+498
+567
+max infected-others
+max [infected-others] of turtles with [infected-others > 0]
+17
+1
+11
+
+MONITOR
+359
+573
+503
+618
+variance infected-others
+standard-deviation [infected-others] of turtles with [infected-others > 0]
+2
+1
+11
+
+MONITOR
+358
+623
+505
+668
+mean infected-others
+mean ([infected-others] of turtles with [infected-others > 0])
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -804,39 +840,97 @@ NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
+  <experiment name="no-intervention" repetitions="20" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <metric>count turtles</metric>
+    <metric>count turtles with [infected? = false]</metric>
+    <metric>count turtles with [infected? = true]</metric>
+    <metric>count turtles with [recovered? = true]</metric>
+    <metric>death-count</metric>
     <enumeratedValueSet variable="average-susceptibility">
-      <value value="29"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="initial-infected">
-      <value value="1"/>
+      <value value="20"/>
+      <value value="60"/>
+      <value value="100"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="average-recovery-time">
       <value value="504"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="mass-testing-intensity">
-      <value value="0"/>
+    <enumeratedValueSet variable="initial-population">
+      <value value="5000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-infected">
+      <value value="1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="average-death-rate">
-      <value value="0"/>
+      <value value="0.2"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="average-recovery-rate">
-      <value value="80"/>
+      <value value="90"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="quarantine-delay">
       <value value="1"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="initial-population">
-      <value value="5000"/>
+    <enumeratedValueSet variable="mass-testing-intensity">
+      <value value="0"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="social-distancing-intensity">
       <value value="0"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="lockdown-intensity">
       <value value="0"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="interventions" repetitions="3" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles</metric>
+    <metric>count turtles with [infected? = false]</metric>
+    <metric>count turtles with [infected? = true]</metric>
+    <metric>count turtles with [recovered? = true]</metric>
+    <metric>death-count</metric>
+    <enumeratedValueSet variable="average-susceptibility">
+      <value value="20"/>
+      <value value="60"/>
+      <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-recovery-time">
+      <value value="504"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-population">
+      <value value="5000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-infected">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-death-rate">
+      <value value="0.2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-recovery-rate">
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine-delay">
+      <value value="1"/>
+      <value value="3"/>
+      <value value="7"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mass-testing-intensity">
+      <value value="0"/>
+      <value value="20"/>
+      <value value="60"/>
+      <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="social-distancing-intensity">
+      <value value="0"/>
+      <value value="70"/>
+      <value value="80"/>
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="lockdown-intensity">
+      <value value="0"/>
+      <value value="80"/>
+      <value value="90"/>
+      <value value="100"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
