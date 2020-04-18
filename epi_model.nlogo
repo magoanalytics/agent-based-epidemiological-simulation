@@ -122,7 +122,7 @@ to move
 end
 
 to quarantine
-  if random 100 < mass-testing-intensity and ticks mod (quarantine-delay * 24) = 0 and ticks != 0 and ([quarantined?] of self = false)[
+  if random 100 < mass-testing-intensity and ticks mod (quarantine-delay * 24) = 0 and ticks != 0 and ([quarantined?] of self = false) and infected-duration >= (quarantine-delay * 24)[
     set quarantined-count quarantined-count + 1
     move-to one-of patches with [quarantine? = true]
     set quarantined? true
@@ -268,7 +268,7 @@ average-susceptibility
 average-susceptibility
 0
 100
-20.0
+100.0
 1
 1
 NIL
@@ -398,7 +398,7 @@ quarantine-delay
 quarantine-delay
 1
 7
-1.0
+4.0
 1
 1
 NIL
@@ -428,7 +428,7 @@ mass-testing-intensity
 mass-testing-intensity
 0
 100
-0.0
+30.0
 1
 1
 NIL
@@ -454,7 +454,7 @@ social-distancing-intensity
 social-distancing-intensity
 0
 100
-80.0
+0.0
 1
 1
 NIL
