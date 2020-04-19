@@ -1,6 +1,9 @@
 globals [
   quarantined-count
   death-count
+  max-infected-others
+  variance-infected-others
+  mean-infected-others
 ]
 
 turtles-own [
@@ -70,6 +73,9 @@ to initialize-population
   ask n-of initial-infected turtles [set color red set infected? True]
   set quarantined-count 0
   set death-count 0
+  set max-infected-others 0
+  set variance-infected-others 0
+  set mean-infected-others 0
 end
 
 to move
@@ -162,6 +168,16 @@ to recover
   ]
 end
 
+to update-infected-others
+  if count turtles with [infected-others > 0] > 0 [
+    set max-infected-others max [infected-others] of turtles with [infected-others > 0]
+    set mean-infected-others mean [infected-others] of turtles with [infected-others > 0]
+  ]
+  if count turtles with [infected-others > 0] >= 2 [
+    set variance-infected-others standard-deviation [infected-others] of turtles with [infected-others > 0]
+  ]
+end
+
 ;==========================================================
 to setup
   clear-all
@@ -179,6 +195,7 @@ to go
     die-infected
     recover
   ]
+  update-infected-others
   tick
 end
 ;==========================================================
@@ -466,7 +483,7 @@ MONITOR
 498
 567
 max infected-others
-max [infected-others] of turtles with [infected-others > 0]
+max-infected-others
 17
 1
 11
@@ -477,7 +494,7 @@ MONITOR
 503
 618
 variance infected-others
-standard-deviation [infected-others] of turtles with [infected-others > 0]
+variance-infected-others
 2
 1
 11
@@ -488,8 +505,8 @@ MONITOR
 505
 668
 mean infected-others
-mean ([infected-others] of turtles with [infected-others > 0])
-17
+mean-infected-others
+2
 1
 11
 
