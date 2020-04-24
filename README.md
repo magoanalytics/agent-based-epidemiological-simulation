@@ -12,7 +12,10 @@ Netlogo is an open source, cross-platform multi-agent programmable modeling envi
 ### Getting Started
 Download the latest version using the following link: https://ccl.northwestern.edu/netlogo/download.shtml. When unpacked, a folder containing all the necessary files will be created. Open the Netlogo application file to launch. 
 
-### Usage
+### Sample Usage
+<p align="center">
+<img src=/pictures/usage.png alt="portfolio_view" width=750 height=500>
+</p>
 The following parameters can be adjusted in the interface tab:
 
 |Model Parameter|Description|Value|
