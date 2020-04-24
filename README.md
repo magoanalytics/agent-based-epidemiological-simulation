@@ -1,4 +1,4 @@
-## Agent-Based Epidemiological Simulation Using Netlogo
+# Agent-Based Epidemiological Simulation Using Netlogo
 This project aims to determine and quantify the effects of implementing lockdown, mass testing, quarantine delays, and social distancing in controlling the spread of the disease. In particular, we focus on the effects of these interventions to the recovery and death rates. 
 
 ### What is Agent-Based Modelling?
@@ -9,10 +9,10 @@ Currently, there are a number of platforms that provide users with tools needed 
 ### Why Netlogo?
 Netlogo is an open source, cross-platform multi-agent programmable modeling environment. Its user-friendly language allows users to quickly draft prototypes and visualize the results through an interactive customizable interface. In addition, Netlogo also includes dozens of pre-built models ranging from tumor growth simulation, to modelling behavior of gas particles. For more information, visit the official Netlogo site: https://ccl.northwestern.edu/netlogo/.
 
-### Getting Started
+## Getting Started
 Download the latest version using the following link: https://ccl.northwestern.edu/netlogo/download.shtml. When unpacked, a folder containing all the necessary files will be created. Open the Netlogo application file to launch. 
 
-### Sample Usage
+## Sample Usage
 <p align="center">
 <img src=/pictures/usage.png alt="portfolio_view" width=750 height=500>
 </p>
@@ -30,5 +30,5 @@ The following parameters can be adjusted in the interface tab:
 |mass-testing-intensity|Probability of an agent being tested every 24 hours|[0, 100]|
 |quarantine-delay|Number of days before infected agent is quarantined after being tested positve|[1, 7]|
 |social-distancing-intensity|Probability of an agent to observe social distancing|[0, 100]|
-### Contributing 
+## Contributing 
 https://ccl.northwestern.edu/netlogo/
