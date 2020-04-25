@@ -14,18 +14,18 @@ Netlogo is an open source, cross-platform multi-agent programmable modeling envi
 Download the latest version using the following link: https://ccl.northwestern.edu/netlogo/download.shtml. When unpacked, a folder containing all the necessary files will be created. Open the Netlogo application file to launch. 
 
 ### Clone Repository
-After cloning the repository, load `addr` epi_model.nlogo from the file tab. Alternatively, you can simply double-click epi_model.nlogo from the repository folder.  
+After cloning the repository, load `epi_model.nlogo` from the file tab. Alternatively, you can simply double-click `epi_model.nlogo` from the repository folder.  
 
 ### Setup and Go Procedures
-Move the sliders in the interface tab to modify hyperparameters to their desired values, then click Setup button to initiate and update changes to the model. Click Go button to run the simulation. 
+Move the sliders in the interface tab to modify hyperparameters to their desired values, then click `Setup` button to initiate and update changes to the model. Click `Go` button to run the simulation. 
 
 ## Sample Experiment
-To isolate the effect of social distancing
+To isolate the effect of social distancing, three separate simulations were done where the `social-distancing-intensity` was set to 0, 50, 100 for each run. The rest of the hyperparameters were set to constant. 
 
 <p align="center">
 <img src=/pictures/usage.png alt="portfolio_view" width=750 height=500>
 </p>
-The table below lists the hyperparameters that can be adjusted in the interface tab:
+The table below lists the hyperparameters, together with a short description and possible values, that can be adjusted in the interface tab:
 
 |Model Parameter|Description|Value|
 |-|-|-|
