@@ -28,7 +28,13 @@ Agents are allowed to move around the world, infect other agents, recover, or di
 At each tick, agents are allowed to move in a random direction. If a susceptible agent is near an infected agent, the latter has a probability of being infected equal to its susceptibility. Here, susceptibility is an agent-level parameter that is used to model a person's hygiene, where a higher `susceptibility` value corresponds to lower hygenic behavior. On the other hand, if an infected agent has been sick for more than or equal to its `recovery-time`, it has a probability of recovering equal to its `recovery-rate`. However, at each tick, an infected agent also has a probability of dying equal to its `death-rate`. 
 
 ### Environment 
+<img align="left" src="pictures/sample_envi.png" width=350>
+
 The environment is where the simulation takes place. This is composed of an NxN grid boxes of equal area called `patches`. Each patch can either be a `normal` patch, `border` patch, or a `quarantine` patch. In differentiate these patches, the `border` patches are colored dark yellow while `quarantine` patches are colored light yellow. `Normal` patches are colored black.
+
+`Border` patches divide the environment into areas that can represent a town or even an entire city. `Quarantine` patches can be found at the center. Infected agents that are quarantined are not allowed to leave the area in order to prevent them from further spreading the disease.
+
+The environment is modelled to be bounded, or an environment where wrapping is not allowed. This prevents agents that travel at the edge of the world to appear on the other side.
 
 ### Lockdown
 During lockdowns, agents have a probability of crossing border patches equal to the `lockdown-intensity` value. This allows us to simulate not only complete lockdowns, but also those that are partially implemented.
