@@ -1,5 +1,5 @@
 # Agent-Based Epidemiological Simulation 
-This project aims to determine and quantify the effects of implementing lockdown, mass testing, quarantine delays, and social distancing in controlling the spread of the disease. In particular, we focus on the effects of these interventions to the recovery and death rates. 
+This project aims to determine and quantify the effects of implementing lockdown, mass testing, quarantine delays, and social distancing in controlling the spread of the disease. In particular, we focus on the effects of these interventions to the recovery and death rates. To simulate this, we use a technique known as agent-based modelling. 
 
 ### What is Agent-Based Modelling?
 <img align="right" src="pictures/sample_run.gif" width="400" height="400" />
