@@ -19,13 +19,13 @@ Download the latest version using the following link: https://ccl.northwestern.e
 After cloning the repository, load `epi_model.nlogo` from the file tab. Alternatively, you can simply double-click `epi_model.nlogo` from the repository folder.  
 
 ### Setup and Go Procedures
-Move the sliders in the interface tab to modify hyperparameters to their desired values, then click `Setup` button to initiate and update changes to the model. Click `Go` button to run the simulation. 
+Move the sliders and/or select values from the drop-down list in the interface tab to modify hyperparameters to their desired values, then click `Setup` button to initiate and update changes to the model. Click `Go` button to run the simulation. 
 
 <p align="center">
 <img src="pictures/sample_interface.png" width=500>
 </p>
 
-## Modelling 
+## Modelling Approach
 ### Agent Behavior
 <img align="right" src="pictures/sample_agent.png" width=200>
 
