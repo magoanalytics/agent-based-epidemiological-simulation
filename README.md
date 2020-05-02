@@ -1,5 +1,5 @@
 # Agent-Based Epidemiological Simulation 
-This project aims to determine and quantify the effects of implementing lockdown, mass testing, quarantine delays, and social distancing in controlling the spread of the disease. In particular, we focus on the effects of these interventions to the recovery and death rates. To simulate this, we use a technique known as agent-based modelling. 
+This project aims to determine and quantify the effects of implementing lockdown, mass testing, quarantine delays, and social distancing in controlling the spread of a disease. In particular, we focus on the effects of these interventions to the recovery and death rates. To simulate this, we use a technique known as agent-based modelling. 
 
 ### What is Agent-Based Modelling?
 <img align="right" src="pictures/sample_run.gif" width="400" height="400" />
@@ -29,9 +29,11 @@ Move the sliders and/or select values from the drop-down list in the interface t
 ### Agent Behavior
 <img align="right" src="pictures/sample_agent.png" width=200>
 
-Agents are allowed to move around the world, infect other agents, recover, or die from the disease depending on the its current properties and surrounding environment. Agents can either be in the following states: `susceptible`, `infected`, `recovered`, or `dead`. To differentiate one state from the other, agents that are `susceptible`, `infected`, or `recovered` are colored green, red, and blue, respectively. The exception would be when an agent is considered `dead`, in which case the agent is removed from the simulation entirely. 
+Agents are allowed to move around the world, infect other agents, recover, or die from the disease depending on the its current properties and surrounding environment. Agents can either be in the following states: `susceptible`, `infected`, `recovered`, or `dead`. To differentiate one state from the other, agents that are `susceptible`, `infected`, or `recovered` are colored green, red, and blue, respectively. The exception would be when an agent is considered `dead`, in which case the agent is removed from the simulation entirely.
 
-At each tick, agents are allowed to move in a random direction. If a susceptible agent is near an infected agent, the latter has a probability of being infected equal to its susceptibility. Here, susceptibility is an agent-level parameter that is used to model a person's hygiene, where a higher `susceptibility` value corresponds to lower hygenic behavior. On the other hand, if an infected agent has been sick for more than or equal to its `recovery-time`, it has a probability of recovering equal to its `recovery-rate`. However, at each tick, an infected agent also has a probability of dying equal to its `death-rate`. 
+At each tick, agents are allowed to move in a random direction. If a `susceptible` agent is near an `infected` agent, the latter has a probability of being infected equal to its susceptibility. Here, susceptibility is an agent-level parameter that is used to model a person's hygiene, where a higher `susceptibility` value corresponds to lower hygenic behavior. On the other hand, if an infected agent has been sick for more than or equal to its `recovery-time`, it has a probability of recovering equal to its `recovery-rate`. However, at each tick, an infected agent also has a probability of dying equal to its `death-rate`. 
+
+It is assumed that agents that have recovered gain full immunity, and therefore cannot be infected twice.
 
 ### Environment 
 <img align="left" src="pictures/sample_envi.png" width=325>
