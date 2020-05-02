@@ -40,6 +40,8 @@ The environment is modelled to be bounded, or an environment where wrapping is n
 During lockdowns, agents have a probability of crossing border patches equal to the `lockdown-intensity` value. This allows us to simulate not only complete lockdowns, but also those that are partially implemented.
 
 ### Quarantine and Isolation
+<img align="right" src="pictures/sample_quarantine.png" width=200>
+
 Every 24 ticks, each agent has a probability of being test equal to the `mass-testing-intensity` value. This allows us to simulate mass testing, where everyone is tested regardless of whether the person is showing symptoms or not, as well as simulating testing done on a much smaller scale. To simulate the delay between a person being tested positve to when the person is quarantined, an additional parameter is added named `quarantine-delay`, which ranges from one day to up to one week. An agent that is quarantined is transferred to an isolated area in order to prevent the agent from infecting other agents. 
 
 ### Social Distancing
