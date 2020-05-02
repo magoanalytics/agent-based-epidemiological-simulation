@@ -19,6 +19,10 @@ After cloning the repository, load `epi_model.nlogo` from the file tab. Alternat
 ### Setup and Go Procedures
 Move the sliders in the interface tab to modify hyperparameters to their desired values, then click `Setup` button to initiate and update changes to the model. Click `Go` button to run the simulation. 
 
+<p align="center">
+<img src="pictures/sample_interface.png" width=500>
+</p>
+
 ## Modelling 
 ### Agent Behavior
 <img align="right" src="pictures/sample_agent.png" width=200>
