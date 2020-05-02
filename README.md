@@ -34,7 +34,7 @@ The environment is where the simulation takes place. This is composed of an NxN 
 
 `Border` patches divide the environment into areas that can represent a town or even an entire city. `Quarantine` patches can be found at the center. Infected agents that are quarantined are not allowed to leave the area in order to prevent them from further spreading the disease.
 
-The environment is modelled to be bounded, or an environment where wrapping is not allowed. This prevents agents that travel at the edge of the world to appear on the other side.
+The environment is said to be bounded, or an environment where wrapping is not allowed. This prevents agents from travelling from the edge of the world to the opposite edge.
 
 ### Lockdown
 During lockdowns, agents have a probability of crossing border patches equal to the `lockdown-intensity` value. This allows us to simulate not only complete lockdowns, but also those that are partially implemented.
