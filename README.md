@@ -19,12 +19,25 @@ After cloning the repository, load `epi_model.nlogo` from the file tab. Alternat
 ### Setup and Go Procedures
 Move the sliders in the interface tab to modify hyperparameters to their desired values, then click `Setup` button to initiate and update changes to the model. Click `Go` button to run the simulation. 
 
-## Sample Experiment
-To isolate the effect of social distancing, three separate simulations were done where the `social-distancing-intensity` was set to 0, 50, 100 for each run. The rest of the hyperparameters were set to constant. 
+## Modelling 
+### Agent Behavior
+Agents are allowed to move around the world, infect other agents, recover, or die from the disease depending on the its current properties and surrounding environment. Agents can either be in the following states: `susceptible`, `infected`, `recovered`, or `dead`. To differentiate one state from the other, agents that are `suscetible`, `infected`, or `recovered` are colored green, red, and blue, respectively. The exception would be when an agent is considered `dead`, in which case the agent is removed from the simulation entirely. 
 
-<p align="center">
-<img src=/pictures/usage.png alt="portfolio_view" width=750 height=500>
-</p>
+At each tick, agents are allowed to move in a random direction. If a susceptible agent is near an infected agent, the latter has a probability of being infected equal to its susceptibility. Here, susceptibility is an agent-level parameter that is used to model a person's hygiene, where a higher `susceptibility` value corresponds to lower hygenic behavior. On the other hand, if an infected agent has been sick for more than or equal to its `recovery-time`, it has a probability of recovering equal to its `recovery-rate`. However, at each tick, an infected agent also has a probability of dying equal to its `death-rate`. 
+
+### Environment 
+The environment is where the simulation takes place. This is composed of an NxN grid boxes of equal area called `patches`. Each patch can either be a `normal` patch, `border` patch, or a `quarantine` patch. In differentiate these patches, the `border` patches are colored light yellow while `quarantine` patches are colored bright yellow. `Normal` patches are colored black.
+
+### Lockdown
+During lockdowns, agents have a probability of crossing border patches equal to the `lockdown-intensity` value. This allows us to simulate not only complete lockdowns, but also those that are partially implemented.
+
+### Quarantine and Isolation
+Every 24 ticks, each agent has a probability of being test equal to the `mass-testing-intensity` value. This allows us to simulate mass testing, where everyone is tested regardless of whether the person is showing symptoms or not, as well as simulating testing done on a much smaller scale. To simulate the delay between a person being tested positve to when the person is quarantined, an additional parameter is added named `quarantine-delay`, which ranges from one day to up to one week. An agent that is quarantined is transferred to an isolated area in order to prevent the agent from infecting other agents. 
+
+### Social Distancing
+To quantify the effects of distancing oneself from other people, the parameter named `social-distancing-intensity` is added. Each agent has a probability of maintaining a fixed distance from the agent nearest to it equal to the value of this paramter. This allows us to simulate the behavior of the entire system for cases where everyone complies with social distancing and where only a portion of people do. 
+
+## Model Parameters
 The table below lists the hyperparameters, together with a short description and possible values, that can be adjusted in the interface tab:
 
 |Model Parameter|Description|Value|
