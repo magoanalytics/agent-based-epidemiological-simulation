@@ -28,7 +28,7 @@ Agents are allowed to move around the world, infect other agents, recover, or di
 At each tick, agents are allowed to move in a random direction. If a susceptible agent is near an infected agent, the latter has a probability of being infected equal to its susceptibility. Here, susceptibility is an agent-level parameter that is used to model a person's hygiene, where a higher `susceptibility` value corresponds to lower hygenic behavior. On the other hand, if an infected agent has been sick for more than or equal to its `recovery-time`, it has a probability of recovering equal to its `recovery-rate`. However, at each tick, an infected agent also has a probability of dying equal to its `death-rate`. 
 
 ### Environment 
-<img align="left" src="pictures/sample_envi.png" width=350>
+<img align="left" src="pictures/sample_envi.png" width=325>
 
 The environment is where the simulation takes place. This is composed of an NxN grid boxes of equal area called `patches`. Each patch can either be a `normal` patch, `border` patch, or a `quarantine` patch. In differentiate these patches, the `border` patches are colored dark yellow while `quarantine` patches are colored light yellow. `Normal` patches are colored black.
 
