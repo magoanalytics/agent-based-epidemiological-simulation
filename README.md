@@ -2,7 +2,7 @@
 This project aims to determine and quantify the effects of implementing lockdown, mass testing, quarantine delays, and social distancing in controlling the spread of a disease. In particular, we focus on the effects of these interventions to the recovery and death rates. To simulate this, we use a technique known as agent-based modelling. 
 
 ### What is Agent-Based Modelling?
-<img align="right" src="pictures/sample_run.gif" width="400" height="400" />
+<img align="right" src="pictures/sample_run.gif" width="350" height="350" />
 
 Agent-based modelling (ABM) is a technique that models a complex system by reducing it to the interactions between agents and their environment. Here, agents can possess properties such as age and gender, and can perform actions based on pre-defined set of conditions. The environment possesses properties as well, and can affect the behavior of agents and vice versa. Observables such as population growth can then be measured to infer relationships between agent behavior and the overall behavior of the system. This makes ABMs powerful in that it can be used to observe and quantify the macroscopic behavior of many complex systems over time just by knowing how individual agents behave. This can be achieved without the need to construct differential equations that requires pre-existing knowledge of the relationships between observables. 
 
