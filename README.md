@@ -31,7 +31,7 @@ Move the sliders and/or select values from the drop-down list in the interface t
 
 Agents are allowed to move around the world, infect other agents, recover, or die from the disease depending on the its current properties and surrounding environment. Agents can either be in the following states: `susceptible`, `infected`, `recovered`, or `dead`. To differentiate one state from the other, agents that are `susceptible`, `infected`, or `recovered` are colored green, red, and blue, respectively. The exception would be when an agent is considered `dead`, in which case the agent is removed from the simulation entirely.
 
-At each tick, agents are allowed to move in a random direction. If a `susceptible` agent is near an `infected` agent, the latter has a probability of being infected equal to its susceptibility. Here, susceptibility is an agent-level parameter that is used to model a person's hygiene, where a higher `susceptibility` value corresponds to lower hygenic behavior. On the other hand, if an infected agent has been sick for more than or equal to its `recovery-time`, it has a probability of recovering equal to its `recovery-rate`. However, at each tick, an infected agent also has a probability of dying equal to its `death-rate`. 
+At each tick, agents are allowed to move in a random direction. If a `susceptible` agent is near an `infected` agent, the latter has a probability of being infected equal to its vulnerability. Here, vulnerability is an agent-level parameter that is used to model a person's hygiene, where a higher `vulnerability` value corresponds to lower hygenic behavior. On the other hand, if an infected agent has been sick for more than or equal to its `recovery-time`, it has a probability of recovering equal to its `recovery-rate`. However, at each tick, an infected agent also has a probability of dying equal to its `death-rate`. 
 
 It is assumed that agents that have recovered gain full immunity, and therefore cannot be infected twice.
 
@@ -62,7 +62,7 @@ The table below lists the hyperparameters, together with a short description and
 |-|-|-|
 |initial-populatin|Initial number of agents at the start of the simulation (t = t<sub>0</sub>)|[10,5000]|
 |initial-infected|Initial number of infected agents at the start of the simulation (t = t<sub>0</sub>)|[1, 10]|
-|average-susceptibility|Average probability of a person being infected when near infected agent(s)|[0, 100]|
+|average-vulnerability|Average probability of a person being infected when near infected agent(s)|[0, 100]|
 |average-recovery-rate|Average probability of an infected agent to recover|[0, 100]|
 |average-recovery-time|Average time needed for an agent to have a chance to recover after being infected|{336, 504, 672}|
 |average-death-rate|Average probability of an infected agent dying|[0, 1]|
