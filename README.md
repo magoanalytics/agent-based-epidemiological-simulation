@@ -22,7 +22,7 @@ After cloning the repository, load `epi_model.nlogo` from the file tab. Alternat
 Move the sliders and/or select values from the drop-down list in the interface tab to modify hyperparameters to their desired values, then click `Setup` button to initiate and update changes to the model. Click `Go` button to run the simulation. 
 
 <p align="center">
-<img src="pictures/sample_interface.png" width=500>
+<img src="pictures/interface.png" width=500>
 </p>
 
 ## Modelling Approach
