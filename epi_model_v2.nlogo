@@ -133,7 +133,7 @@ to move
 end
 
 to quarantine
-  if random 100 < mass-testing-intensity and ticks mod (quarantine-delay * 24) = 0 and ticks != 0 and ([quarantined?] of self = false) and infected-duration >= (quarantine-delay * 24)[
+  if infected-duration >= (quarantine-delay * 24)[
     set quarantined-count quarantined-count + 1
     move-to one-of patches with [quarantine? = true]
     set quarantined? true
@@ -194,8 +194,14 @@ end
 to go
   if count turtles with [infected? = true] = 0 [stop]
   ask turtles with [quarantined? = false] [move]
-  ask turtles with [infected?] [
-    quarantine
+  if ticks mod 24 = 0 and ticks != 0 [
+    ask n-of (mass-testing-intensity * 0.01 * count turtles with [quarantine? = false]) turtles with [quarantined? = false] [
+      if [infected?] of self = true [
+        quarantine
+      ]
+    ]
+  ]
+  ask turtles with [infected? = true] [
     infect
     die-infected
     recover
@@ -233,10 +239,10 @@ ticks
 30.0
 
 BUTTON
-353
-10
-419
-43
+391
+11
+457
+44
 Setup
 setup
 NIL
@@ -265,10 +271,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-353
-43
-419
-77
+391
+44
+457
+78
 Run
 go
 T
@@ -393,10 +399,10 @@ death-count
 11
 
 SLIDER
-168
-10
-353
-43
+953
+110
+1138
+143
 quarantine-delay
 quarantine-delay
 1
@@ -423,15 +429,15 @@ NIL
 HORIZONTAL
 
 SLIDER
-168
-43
-353
-76
+957
+61
+1142
+94
 mass-testing-intensity
 mass-testing-intensity
 0
 100
-60.0
+100.0
 1
 1
 NIL
@@ -495,6 +501,21 @@ mean-infected-others
 2
 1
 11
+
+SLIDER
+950
+10
+1122
+43
+health-capacity
+health-capacity
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
