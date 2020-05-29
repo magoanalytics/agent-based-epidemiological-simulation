@@ -18,6 +18,7 @@ turtles-own [
   quarantined?
   infected-count
   infected-others
+  asymptomatic?
 ]
 
 patches-own [
@@ -78,6 +79,7 @@ to initialize-population
     setxy -24 24
     set color red
     set infected? True
+    set asymptomatic? True
   ]
   set quarantined-count 0
   set death-count 0
@@ -85,8 +87,8 @@ to initialize-population
   set variance-infected-count 0
   set mean-infected-count 0
   ifelse infected-movement = true
-  [set movement 1]
   [set movement 0.5]
+  [set movement 1]
 end
 
 to move
@@ -98,17 +100,17 @@ to move
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
         ifelse [quarantine?] of patch-in-front = true [
-          ifelse [infected?] of self = true and infected-movement = true
+          ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
           [rt 180 fd 0.5 * movement]
           [rt 180 fd 0.5]
         ]
         [
           ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
-          [ifelse [infected?] of self = true and infected-movement = true
+          [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
             [rt 180 fd 0.5 * movement]
             [rt 180 fd 0.5]
           ]
-          [ifelse [infected?] of self = true and infected-movement = true
+          [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
             [fd 0.5 * movement]
             [fd 0.5]
           ]
@@ -120,17 +122,17 @@ to move
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
         ifelse [quarantine?] of patch-in-front = true [
-          ifelse [infected?] of self = true and infected-movement = true
+          ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
           [rt 180 fd 0.5 * movement]
           [rt 180 fd 0.5]
         ]
         [
           ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
-          [ifelse [infected?] of self = true and infected-movement = true
+          [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
             [rt 180 fd 0.5 * movement]
             [rt 180 fd 0.5]
           ]
-          [ifelse [infected?] of self = true and infected-movement = true
+          [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
             [fd 0.5 * movement]
             [fd 0.5]
           ]
@@ -143,17 +145,17 @@ to move
     let patch-in-front patch-ahead 1
     if patch-in-front != nobody [
       ifelse [quarantine?] of patch-in-front = true [
-        ifelse [infected?] of self = true and infected-movement = true
+        ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
         [rt 180 fd 1 * movement]
         [rt 180 fd 1]
       ]
       [
         ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
-        [ifelse [infected?] of self = true and infected-movement = true
+        [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
           [rt 180 fd 1 * movement]
           [rt 180 fd 1]
         ]
-        [ifelse [infected?] of self = true and infected-movement = true
+        [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
           [fd 1 * movement]
           [fd 1]
         ]
@@ -177,6 +179,9 @@ to infect
       if random 100 < vulnerability [
         set color red
         set infected? true
+        ifelse asymptomatic-fraction > 0 and random 100 < asymptomatic-fraction
+        [set asymptomatic? True]
+        [set asymptomatic? False]
         ask myself [set infected-count infected-count + 1]
       ]
     ]
@@ -495,7 +500,7 @@ social-distancing-intensity
 social-distancing-intensity
 0
 100
-80.0
+0.0
 1
 1
 NIL
@@ -550,15 +555,30 @@ NIL
 HORIZONTAL
 
 SWITCH
-950
-112
-1093
-145
+946
+385
+1089
+418
 infected-movement
 infected-movement
 1
 1
 -1000
+
+SLIDER
+946
+418
+1119
+451
+asymptomatic-fraction
+asymptomatic-fraction
+0
+100
+0.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
