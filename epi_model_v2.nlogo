@@ -19,6 +19,8 @@ turtles-own [
   infected-count
   infected-others
   asymptomatic?
+  elder?
+  male?
 ]
 
 patches-own [
@@ -73,7 +75,11 @@ to initialize-population
 
     set infected-count 0
     set infected-others 0
+
+    set elder? False
+    set male? False
   ]
+
   ; fixed initial condition
   ask n-of initial-infected turtles [
     setxy -24 24
@@ -81,12 +87,23 @@ to initialize-population
     set infected? True
     set asymptomatic? True
   ]
+
+  ; fixed initial elder proportion
+  ask n-of (elder-fraction * 0.01 * initial-population) turtles [
+    set elder? True
+  ]
+
+  ; fixed initial gender proportion
+  ask n-of (male-fraction * 0.01 * initial-population) turtles [
+    set male? True
+  ]
+
   set quarantined-count 0
   set death-count 0
   set max-infected-count 0
   set variance-infected-count 0
   set mean-infected-count 0
-  ifelse infected-movement? = true
+  ifelse infected-movement? = True
   [set movement 0.5]
   [set movement 1]
 end
@@ -194,7 +211,12 @@ to infect
 end
 
 to die-infected
-  if random-float 100 < death-rate [
+  ; elder and male agents have increased fatality rate
+  let fatality death-rate
+  if [elder?] of self = True [set fatality fatality * 0.18]
+  if [male?] of self = True [set fatality fatality * 2]
+
+  if random-float 100 < fatality [
     set death-count death-count + 1
     die
   ]
@@ -253,9 +275,9 @@ end
 ;==========================================================
 @#$#@#$#@
 GRAPHICS-WINDOW
-473
+437
 10
-930
+894
 468
 -1
 -1
@@ -280,9 +302,9 @@ ticks
 30.0
 
 BUTTON
-183
+327
 10
-249
+393
 43
 Setup
 setup
@@ -312,9 +334,9 @@ NIL
 HORIZONTAL
 
 BUTTON
-183
+327
 43
-249
+393
 77
 Run
 go
@@ -346,8 +368,8 @@ HORIZONTAL
 PLOT
 0
 188
-357
-418
+353
+385
 Population Partitioned by Health Status
 time (hours)
 Partition Count
@@ -363,9 +385,9 @@ PENS
 "recovered" 1.0 0 -13345367 true "" "plot count turtles with [recovered?]"
 
 MONITOR
-357
+353
 188
-436
+432
 233
 active cases 
 count turtles with [infected?]
@@ -389,9 +411,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-0
-43
 168
+43
+327
 76
 initial-infected
 initial-infected
@@ -429,9 +451,9 @@ NIL
 HORIZONTAL
 
 MONITOR
-357
+353
 233
-436
+432
 278
 death count
 death-count
@@ -440,9 +462,9 @@ death-count
 11
 
 SLIDER
-950
+906
 78
-1135
+1091
 111
 quarantine-delay
 quarantine-delay
@@ -470,9 +492,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-950
+906
 44
-1135
+1091
 77
 mass-testing-intensity
 mass-testing-intensity
@@ -483,17 +505,6 @@ mass-testing-intensity
 1
 NIL
 HORIZONTAL
-
-MONITOR
-357
-278
-468
-323
-quarantined count
-quarantined-count
-17
-1
-11
 
 SLIDER
 168
@@ -512,9 +523,9 @@ HORIZONTAL
 
 MONITOR
 291
-418
+385
 431
-463
+430
 max infected-count
 max-infected-count
 17
@@ -523,9 +534,9 @@ max-infected-count
 
 MONITOR
 147
-418
+385
 291
-463
+430
 variance infected-count
 variance-infected-count
 2
@@ -534,9 +545,9 @@ variance-infected-count
 
 MONITOR
 0
-418
+385
 147
-463
+430
 mean infected-count
 mean-infected-count
 2
@@ -544,9 +555,9 @@ mean-infected-count
 11
 
 SLIDER
-950
+906
 10
-1135
+1091
 43
 health-capacity
 health-capacity
@@ -559,9 +570,9 @@ NIL
 HORIZONTAL
 
 SWITCH
-950
+906
 188
-1119
+1075
 221
 infected-movement?
 infected-movement?
@@ -570,9 +581,9 @@ infected-movement?
 -1000
 
 SLIDER
-950
+906
 221
-1123
+1079
 254
 asymptomatic-fraction
 asymptomatic-fraction
@@ -585,20 +596,20 @@ NIL
 HORIZONTAL
 
 MONITOR
-1071
+1027
 112
-1192
+1148
 157
-quarantined agents
+current-capacity
 count turtles-on patches with [quarantine? = True]
 0
 1
 11
 
 SLIDER
-950
+906
 279
-1102
+1058
 312
 testing-accuracy
 testing-accuracy
@@ -611,9 +622,9 @@ NIL
 HORIZONTAL
 
 SWITCH
-950
+906
 313
-1096
+1052
 346
 contact-tracing?
 contact-tracing?
@@ -622,15 +633,45 @@ contact-tracing?
 -1000
 
 MONITOR
-950
+906
 112
-1070
+1026
 157
 health facility capacity
 health-capacity * 0.01 * initial-population
 2
 1
 11
+
+SLIDER
+0
+43
+168
+76
+elder-fraction
+elder-fraction
+0
+100
+0.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+168
+10
+327
+43
+male-fraction
+male-fraction
+0
+100
+70.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
