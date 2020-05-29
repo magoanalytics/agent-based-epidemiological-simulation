@@ -1,9 +1,10 @@
 globals [
   quarantined-count
   death-count
-  max-infected-others
-  variance-infected-others
-  mean-infected-others
+  max-infected-count
+  variance-infected-count
+  mean-infected-count
+  movement
 ]
 
 turtles-own [
@@ -15,6 +16,7 @@ turtles-own [
   recovery-time
   death-rate
   quarantined?
+  infected-count
   infected-others
 ]
 
@@ -68,6 +70,7 @@ to initialize-population
     set death-rate random-normal average-death-rate (average-death-rate / 5)
     if death-rate < 0 [set death-rate 0]
 
+    set infected-count 0
     set infected-others 0
   ]
   ; fixed initial condition
@@ -78,9 +81,12 @@ to initialize-population
   ]
   set quarantined-count 0
   set death-count 0
-  set max-infected-others 0
-  set variance-infected-others 0
-  set mean-infected-others 0
+  set max-infected-count 0
+  set variance-infected-count 0
+  set mean-infected-count 0
+  ifelse infected-movement = true
+  [set movement 1]
+  [set movement 0.5]
 end
 
 to move
@@ -92,12 +98,20 @@ to move
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
         ifelse [quarantine?] of patch-in-front = true [
-          rt 180 fd 0.5
+          ifelse [infected?] of self = true and infected-movement = true
+          [rt 180 fd 0.5 * movement]
+          [rt 180 fd 0.5]
         ]
         [
           ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
-          [rt 180 fd 0.5]
-          [fd 0.5]
+          [ifelse [infected?] of self = true and infected-movement = true
+            [rt 180 fd 0.5 * movement]
+            [rt 180 fd 0.5]
+          ]
+          [ifelse [infected?] of self = true and infected-movement = true
+            [fd 0.5 * movement]
+            [fd 0.5]
+          ]
         ]
       ]
     ]
@@ -106,12 +120,20 @@ to move
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
         ifelse [quarantine?] of patch-in-front = true [
-          rt 180 fd 0.5
+          ifelse [infected?] of self = true and infected-movement = true
+          [rt 180 fd 0.5 * movement]
+          [rt 180 fd 0.5]
         ]
         [
           ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
-          [rt 180 fd 0.5]
-          [fd 0.5]
+          [ifelse [infected?] of self = true and infected-movement = true
+            [rt 180 fd 0.5 * movement]
+            [rt 180 fd 0.5]
+          ]
+          [ifelse [infected?] of self = true and infected-movement = true
+            [fd 0.5 * movement]
+            [fd 0.5]
+          ]
         ]
       ]
     ]
@@ -121,12 +143,20 @@ to move
     let patch-in-front patch-ahead 1
     if patch-in-front != nobody [
       ifelse [quarantine?] of patch-in-front = true [
-        rt 180 fd 1
+        ifelse [infected?] of self = true and infected-movement = true
+        [rt 180 fd 1 * movement]
+        [rt 180 fd 1]
       ]
       [
         ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
-        [rt 180 fd 1]
-        [fd 1]
+        [ifelse [infected?] of self = true and infected-movement = true
+          [rt 180 fd 1 * movement]
+          [rt 180 fd 1]
+        ]
+        [ifelse [infected?] of self = true and infected-movement = true
+          [fd 1 * movement]
+          [fd 1]
+        ]
       ]
     ]
   ]
@@ -142,15 +172,15 @@ end
 
 to infect
   let nearby-neighbors turtles in-radius 1 with [not infected? and not recovered? and not quarantined?]
-
   if ([quarantined?] of self = false) and nearby-neighbors != nobody[
     ask nearby-neighbors [
       if random 100 < vulnerability [
         set color red
         set infected? true
-        ask myself [set infected-others infected-others + 1]
+        ask myself [set infected-count infected-count + 1]
       ]
     ]
+    set infected-others nearby-neighbors
   ]
 end
 
@@ -173,13 +203,13 @@ to recover
   ]
 end
 
-to update-infected-others
-  if count turtles with [infected-others > 0] > 0 [
-    set max-infected-others max [infected-others] of turtles with [infected-others > 0]
-    set mean-infected-others mean [infected-others] of turtles with [infected-others > 0]
+to update-infected-count
+  if count turtles with [infected-count > 0] > 0 [
+    set max-infected-count max [infected-count] of turtles with [infected-count > 0]
+    set mean-infected-count mean [infected-count] of turtles with [infected-count > 0]
   ]
-  if count turtles with [infected-others > 0] >= 2 [
-    set variance-infected-others standard-deviation [infected-others] of turtles with [infected-others > 0]
+  if count turtles with [infected-count > 0] >= 2 [
+    set variance-infected-count standard-deviation [infected-count] of turtles with [infected-count > 0]
   ]
 end
 
@@ -195,9 +225,11 @@ to go
   if count turtles with [infected? = true] = 0 [stop]
   ask turtles with [quarantined? = false] [move]
   if ticks mod 24 = 0 and ticks != 0 [
-    ask n-of (mass-testing-intensity * 0.01 * count turtles with [quarantine? = false]) turtles with [quarantined? = false] [
-      if [infected?] of self = true [
-        quarantine
+    if count turtles with [quarantined? = false] > 0 [
+      ask n-of (mass-testing-intensity * 0.01 * count turtles with [quarantine? = false]) turtles with [quarantined? = false] [
+        if [infected?] of self = true [
+          quarantine
+        ]
       ]
     ]
   ]
@@ -206,19 +238,19 @@ to go
     die-infected
     recover
   ]
-  update-infected-others
+  update-infected-count
   tick
 end
 ;==========================================================
 @#$#@#$#@
 GRAPHICS-WINDOW
-477
+473
 10
-925
-459
+930
+468
 -1
 -1
-2.19
+2.234
 1
 10
 1
@@ -239,10 +271,10 @@ ticks
 30.0
 
 BUTTON
-391
-11
-457
-44
+183
+10
+249
+43
 Setup
 setup
 NIL
@@ -271,10 +303,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-391
-44
-457
-78
+183
+43
+249
+77
 Run
 go
 T
@@ -399,15 +431,15 @@ death-count
 11
 
 SLIDER
-953
-110
-1138
-143
+950
+78
+1135
+111
 quarantine-delay
 quarantine-delay
-1
+0
 7
-1.0
+0.0
 1
 1
 NIL
@@ -429,15 +461,15 @@ NIL
 HORIZONTAL
 
 SLIDER
-957
-61
-1142
-94
+950
+44
+1135
+77
 mass-testing-intensity
 mass-testing-intensity
 0
 100
-100.0
+0.0
 1
 1
 NIL
@@ -463,7 +495,7 @@ social-distancing-intensity
 social-distancing-intensity
 0
 100
-0.0
+80.0
 1
 1
 NIL
@@ -474,8 +506,8 @@ MONITOR
 418
 431
 463
-max infected-others
-max-infected-others
+max infected-count
+max-infected-count
 17
 1
 11
@@ -485,8 +517,8 @@ MONITOR
 418
 291
 463
-variance infected-others
-variance-infected-others
+variance infected-count
+variance-infected-count
 2
 1
 11
@@ -496,8 +528,8 @@ MONITOR
 418
 147
 463
-mean infected-others
-mean-infected-others
+mean infected-count
+mean-infected-count
 2
 1
 11
@@ -505,17 +537,28 @@ mean-infected-others
 SLIDER
 950
 10
-1122
+1135
 43
 health-capacity
 health-capacity
 0
 100
-50.0
+0.0
 1
 1
 NIL
 HORIZONTAL
+
+SWITCH
+950
+112
+1093
+145
+infected-movement
+infected-movement
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -957,7 +1000,7 @@ NetLogo 6.1.1
       <value value="100"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="interventions" repetitions="1" runMetricsEveryStep="true">
+  <experiment name="mass testing 60" repetitions="5" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <metric>count turtles with [infected? = true]</metric>
@@ -980,14 +1023,58 @@ NetLogo 6.1.1
       <value value="90"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="mass-testing-intensity">
-      <value value="30"/>
       <value value="60"/>
-      <value value="90"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="quarantine-delay">
       <value value="1"/>
       <value value="3"/>
       <value value="7"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="social-distancing-intensity">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="lockdown-intensity">
+      <value value="0"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="sensitivity analysis - no delay" repetitions="5" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles with [infected? = true]</metric>
+    <enumeratedValueSet variable="initial-infected">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-recovery-time">
+      <value value="504"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-vulnerability">
+      <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mass-testing-intensity">
+      <value value="10"/>
+      <value value="20"/>
+      <value value="30"/>
+      <value value="40"/>
+      <value value="50"/>
+      <value value="60"/>
+      <value value="70"/>
+      <value value="80"/>
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-death-rate">
+      <value value="0.2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="health-capacity">
+      <value value="6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-recovery-rate">
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine-delay">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-population">
+      <value value="5000"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="social-distancing-intensity">
       <value value="0"/>
