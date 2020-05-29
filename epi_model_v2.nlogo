@@ -86,7 +86,7 @@ to initialize-population
   set max-infected-count 0
   set variance-infected-count 0
   set mean-infected-count 0
-  ifelse infected-movement = true
+  ifelse infected-movement? = true
   [set movement 0.5]
   [set movement 1]
 end
@@ -100,17 +100,17 @@ to move
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
         ifelse [quarantine?] of patch-in-front = true [
-          ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
+          ifelse [infected?] of self = true and infected-movement? = true and asymptomatic? = False
           [rt 180 fd 0.5 * movement]
           [rt 180 fd 0.5]
         ]
         [
           ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
-          [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
+          [ifelse [infected?] of self = true and infected-movement? = true and asymptomatic? = False
             [rt 180 fd 0.5 * movement]
             [rt 180 fd 0.5]
           ]
-          [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
+          [ifelse [infected?] of self = true and infected-movement? = true and asymptomatic? = False
             [fd 0.5 * movement]
             [fd 0.5]
           ]
@@ -122,17 +122,17 @@ to move
       let patch-in-front patch-ahead 1
       if patch-in-front != nobody [
         ifelse [quarantine?] of patch-in-front = true [
-          ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
+          ifelse [infected?] of self = true and infected-movement? = true and asymptomatic? = False
           [rt 180 fd 0.5 * movement]
           [rt 180 fd 0.5]
         ]
         [
           ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
-          [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
+          [ifelse [infected?] of self = true and infected-movement? = true and asymptomatic? = False
             [rt 180 fd 0.5 * movement]
             [rt 180 fd 0.5]
           ]
-          [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
+          [ifelse [infected?] of self = true and infected-movement? = true and asymptomatic? = False
             [fd 0.5 * movement]
             [fd 0.5]
           ]
@@ -145,17 +145,17 @@ to move
     let patch-in-front patch-ahead 1
     if patch-in-front != nobody [
       ifelse [quarantine?] of patch-in-front = true [
-        ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
+        ifelse [infected?] of self = true and infected-movement? = true and asymptomatic? = False
         [rt 180 fd 1 * movement]
         [rt 180 fd 1]
       ]
       [
         ifelse [border?] of patch-in-front = true and random 100 < lockdown-intensity
-        [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
+        [ifelse [infected?] of self = true and infected-movement? = true and asymptomatic? = False
           [rt 180 fd 1 * movement]
           [rt 180 fd 1]
         ]
-        [ifelse [infected?] of self = true and infected-movement = true and asymptomatic? = False
+        [ifelse [infected?] of self = true and infected-movement? = true and asymptomatic? = False
           [fd 1 * movement]
           [fd 1]
         ]
@@ -165,9 +165,13 @@ to move
 end
 
 to quarantine
-  if infected-duration >= (quarantine-delay * 24)[
+  ; add variance to quarantine delays
+  let delay random-normal (quarantine-delay * 24) 4
+  if delay < 0 [set delay 0]
+
+  if infected-duration >= delay [
     set quarantined-count quarantined-count + 1
-    move-to one-of patches with [quarantine? = true]
+    move-to one-of patches with [quarantine? = True]
     set quarantined? true
   ]
 end
@@ -232,7 +236,7 @@ to go
   if ticks mod 24 = 0 and ticks != 0 [
     if count turtles with [quarantined? = false] > 0 [
       ask n-of (mass-testing-intensity * 0.01 * count turtles with [quarantine? = false]) turtles with [quarantined? = false] [
-        if [infected?] of self = true and (count turtles-on patches with [quarantine? = True] < health-capacity * 0.01 * 5000) [
+        if [infected?] of self = true and (count turtles-on patches with [quarantine? = True] < health-capacity * 0.01 * 5000) and random 100 < testing-accuracy [
           quarantine
         ]
       ]
@@ -500,7 +504,7 @@ social-distancing-intensity
 social-distancing-intensity
 0
 100
-0.0
+1.0
 1
 1
 NIL
@@ -548,7 +552,7 @@ health-capacity
 health-capacity
 0
 100
-50.0
+58.0
 1
 1
 NIL
@@ -557,10 +561,10 @@ HORIZONTAL
 SWITCH
 950
 188
-1093
+1119
 221
-infected-movement
-infected-movement
+infected-movement?
+infected-movement?
 1
 1
 -1000
@@ -581,13 +585,50 @@ NIL
 HORIZONTAL
 
 MONITOR
-950
-112
 1071
+112
+1192
 157
 quarantined agents
 count turtles-on patches with [quarantine? = True]
 0
+1
+11
+
+SLIDER
+950
+279
+1102
+312
+testing-accuracy
+testing-accuracy
+0
+100
+100.0
+1
+1
+NIL
+HORIZONTAL
+
+SWITCH
+950
+313
+1096
+346
+contact-tracing?
+contact-tracing?
+1
+1
+-1000
+
+MONITOR
+950
+112
+1070
+157
+health facility capacity
+health-capacity * 0.01 * initial-population
+2
 1
 11
 
