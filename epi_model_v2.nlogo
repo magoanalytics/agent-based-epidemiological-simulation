@@ -232,7 +232,7 @@ to go
   if ticks mod 24 = 0 and ticks != 0 [
     if count turtles with [quarantined? = false] > 0 [
       ask n-of (mass-testing-intensity * 0.01 * count turtles with [quarantine? = false]) turtles with [quarantined? = false] [
-        if [infected?] of self = true [
+        if [infected?] of self = true and (count turtles-on patches with [quarantine? = True] < health-capacity * 0.01 * 5000) [
           quarantine
         ]
       ]
@@ -444,7 +444,7 @@ quarantine-delay
 quarantine-delay
 0
 7
-0.0
+3.0
 1
 1
 NIL
@@ -474,7 +474,7 @@ mass-testing-intensity
 mass-testing-intensity
 0
 100
-0.0
+78.0
 1
 1
 NIL
@@ -548,17 +548,17 @@ health-capacity
 health-capacity
 0
 100
-0.0
+50.0
 1
 1
 NIL
 HORIZONTAL
 
 SWITCH
-946
-385
-1089
-418
+950
+188
+1093
+221
 infected-movement
 infected-movement
 1
@@ -566,10 +566,10 @@ infected-movement
 -1000
 
 SLIDER
-946
-418
-1119
-451
+950
+221
+1123
+254
 asymptomatic-fraction
 asymptomatic-fraction
 0
@@ -579,6 +579,17 @@ asymptomatic-fraction
 1
 NIL
 HORIZONTAL
+
+MONITOR
+950
+112
+1071
+157
+quarantined agents
+count turtles-on patches with [quarantine? = True]
+0
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
