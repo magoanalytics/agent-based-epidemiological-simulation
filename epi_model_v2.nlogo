@@ -208,7 +208,7 @@ to infect
         set color red
         set infected? true
         ifelse asymptomatic-fraction > 0 and random 100 < asymptomatic-fraction
-        [set asymptomatic? True]
+        [set asymptomatic? True set color yellow]
         [set asymptomatic? False]
         ask myself [set infected-count infected-count + 1]
       ]
@@ -234,6 +234,11 @@ to recover
       set color blue
       set infected? false
       set recovered? true
+      if [quarantined?] of self = True [
+        move-to one-of patches with [quarantine? = False]
+        set quarantined? False
+        set quarantined-count quarantined-count - 1
+      ]
     ]
   ]
 end
@@ -368,7 +373,7 @@ initial-population
 initial-population
 10
 5000
-4119.0
+5000.0
 1
 1
 NIL
@@ -400,7 +405,7 @@ average-vulnerability
 average-vulnerability
 0
 100
-50.0
+100.0
 1
 1
 NIL
@@ -511,7 +516,7 @@ quarantine-delay
 quarantine-delay
 0
 7
-0.0
+7.0
 1
 1
 NIL
@@ -541,7 +546,7 @@ mass-testing-intensity
 mass-testing-intensity
 0
 100
-0.0
+60.0
 1
 1
 NIL
@@ -604,7 +609,7 @@ health-capacity
 health-capacity
 0
 100
-81.0
+25.0
 1
 1
 NIL
@@ -617,7 +622,7 @@ SWITCH
 221
 infected-movement?
 infected-movement?
-1
+0
 1
 -1000
 
@@ -630,7 +635,7 @@ asymptomatic-fraction
 asymptomatic-fraction
 0
 100
-0.0
+20.0
 1
 1
 NIL
@@ -663,13 +668,13 @@ NIL
 HORIZONTAL
 
 SWITCH
-873
-325
-1019
-358
+1038
+45
+1184
+78
 contact-tracing?
 contact-tracing?
-0
+1
 1
 -1000
 
@@ -715,24 +720,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-873
-358
-1019
-391
-contact-tracing-delay
-contact-tracing-delay
-0
-7
-0.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1037
+1038
 78
-1200
+1184
 111
 contact-tracing-delay
 contact-tracing-delay
@@ -1091,77 +1081,27 @@ NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="sensitivity analysis - no delay" repetitions="5" runMetricsEveryStep="true">
+  <experiment name="Sensitivity Analysis -&gt; mass testing and delay" repetitions="5" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <metric>count turtles with [infected? = true]</metric>
+    <metric>count turtles with [infected? = True]</metric>
     <enumeratedValueSet variable="initial-infected">
       <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="average-recovery-time">
-      <value value="504"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="average-vulnerability">
       <value value="100"/>
     </enumeratedValueSet>
-    <enumeratedValueSet variable="mass-testing-intensity">
-      <value value="10"/>
-      <value value="20"/>
-      <value value="30"/>
-      <value value="40"/>
-      <value value="50"/>
-      <value value="60"/>
-      <value value="70"/>
-      <value value="80"/>
-      <value value="90"/>
+    <enumeratedValueSet variable="health-capacity">
+      <value value="25"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="average-death-rate">
-      <value value="0.2"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="health-capacity">
-      <value value="6"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="average-recovery-rate">
-      <value value="90"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="quarantine-delay">
-      <value value="0"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="initial-population">
-      <value value="5000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="social-distancing-intensity">
-      <value value="0"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="lockdown-intensity">
-      <value value="0"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="mass testing" repetitions="2" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <metric>count turtles with [infected? = True]</metric>
-    <metric>count turtles with [infected? = False]</metric>
-    <metric>count turtles with [quarantined? = True]</metric>
-    <metric>count turtles with [recovered? = True]</metric>
-    <metric>count turtles</metric>
-    <enumeratedValueSet variable="initial-infected">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="average-vulnerability">
-      <value value="50"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="average-death-rate">
-      <value value="0.24"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="health-capacity">
-      <value value="81"/>
+      <value value="0.02"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="male-fraction">
       <value value="0"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="initial-population">
-      <value value="4119"/>
+      <value value="5000"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="testing-accuracy">
       <value value="100"/>
@@ -1176,13 +1116,77 @@ NetLogo 6.1.1
       <value value="504"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="infected-movement?">
-      <value value="false"/>
+      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="asymptomatic-fraction">
-      <value value="0"/>
+      <value value="20"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="mass-testing-intensity">
+      <value value="30"/>
+      <value value="60"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-recovery-rate">
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine-delay">
+      <value value="1"/>
+      <value value="3"/>
+      <value value="7"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="contact-tracing-delay">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="social-distancing-intensity">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="lockdown-intensity">
+      <value value="0"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="Sensitivity Analysis -&gt; 0 delay" repetitions="5" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles with [infected? = True]</metric>
+    <enumeratedValueSet variable="initial-infected">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-vulnerability">
       <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-death-rate">
+      <value value="0.02"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="health-capacity">
+      <value value="25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="male-fraction">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="initial-population">
+      <value value="5000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="testing-accuracy">
+      <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="contact-tracing?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="elder-fraction">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="average-recovery-time">
+      <value value="504"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="infected-movement?">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="asymptomatic-fraction">
+      <value value="20"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mass-testing-intensity">
+      <value value="30"/>
+      <value value="60"/>
+      <value value="90"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="average-recovery-rate">
       <value value="90"/>
@@ -1191,11 +1195,10 @@ NetLogo 6.1.1
       <value value="0"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="contact-tracing-delay">
-      <value value="1"/>
+      <value value="0"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="social-distancing-intensity">
       <value value="0"/>
-      <value value="20"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="lockdown-intensity">
       <value value="0"/>
