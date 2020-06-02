@@ -7,7 +7,7 @@ globals [
 ]
 
 turtles-own [
-  susceptibility
+  vulnerability
   infected?
   recovered?
   infected-duration
@@ -48,9 +48,9 @@ to initialize-population
     set shape "person"
     set color green
 
-    set susceptibility random-normal average-susceptibility (average-susceptibility / 5)
-    if susceptibility > 100 [set susceptibility 100]
-    if susceptibility < 0 [set susceptibility 0]
+    set vulnerability random-normal average-vulnerability (average-vulnerability / 5)
+    if vulnerability > 100 [set vulnerability 100]
+    if vulnerability < 0 [set vulnerability 0]
 
     set infected? false
     set recovered? false
@@ -140,7 +140,7 @@ to infect
 
   if ([quarantined?] of self = false) and nearby-neighbors != nobody[
     ask nearby-neighbors [
-      if random 100 < susceptibility [
+      if random 100 < vulnerability [
         set color red
         set infected? true
         ask myself [set infected-others infected-others + 1]
@@ -201,13 +201,13 @@ end
 ;==========================================================
 @#$#@#$#@
 GRAPHICS-WINDOW
-469
+477
 10
-975
-517
+925
+459
 -1
 -1
-2.48
+2.19
 1
 10
 1
@@ -228,10 +228,10 @@ ticks
 30.0
 
 BUTTON
-0
-220
-66
-253
+353
+10
+419
+43
 Setup
 setup
 NIL
@@ -260,10 +260,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-66
-220
-129
-253
+353
+43
+419
+77
 Run
 go
 T
@@ -281,8 +281,8 @@ SLIDER
 76
 168
 109
-average-susceptibility
-average-susceptibility
+average-vulnerability
+average-vulnerability
 0
 100
 100.0
@@ -293,9 +293,9 @@ HORIZONTAL
 
 PLOT
 0
-253
+188
 357
-483
+418
 Population Partitioned by Health Status
 time (hours)
 Partition Count
@@ -312,9 +312,9 @@ PENS
 
 MONITOR
 357
-253
+188
 436
-298
+233
 active cases 
 count turtles with [infected?]
 0
@@ -335,25 +335,6 @@ average-recovery-rate
 1
 NIL
 HORIZONTAL
-
-PLOT
-0
-484
-357
-694
-Rate of Spread and Recovery
-time (hours)
-Rate 
-0.0
-10.0
-0.0
-1.0
-true
-true
-"" ""
-PENS
-"infected" 1.0 0 -10873583 true "" "plot (count turtles with [infected?]) / count turtles"
-"recoverde" 1.0 0 -14333415 true "" "plot (count turtles with [recovered?]) / count turtles"
 
 SLIDER
 0
@@ -381,15 +362,15 @@ average-recovery-time
 1
 
 SLIDER
-0
-187
 168
-220
+142
+336
+175
 average-death-rate
 average-death-rate
 0
 1
-0.0
+0.02
 0.01
 1
 NIL
@@ -397,9 +378,9 @@ HORIZONTAL
 
 MONITOR
 357
-298
+233
 436
-343
+278
 death count
 death-count
 17
@@ -415,7 +396,7 @@ quarantine-delay
 quarantine-delay
 1
 7
-4.0
+1.0
 1
 1
 NIL
@@ -430,7 +411,7 @@ lockdown-intensity
 lockdown-intensity
 0
 100
-0.0
+70.0
 0.1
 1
 NIL
@@ -445,7 +426,7 @@ mass-testing-intensity
 mass-testing-intensity
 0
 100
-30.0
+0.0
 1
 1
 NIL
@@ -453,9 +434,9 @@ HORIZONTAL
 
 MONITOR
 357
-343
+278
 468
-388
+323
 quarantined count
 quarantined-count
 17
@@ -471,17 +452,17 @@ social-distancing-intensity
 social-distancing-intensity
 0
 100
-0.0
+20.0
 1
 1
 NIL
 HORIZONTAL
 
 MONITOR
-358
-522
-498
-567
+291
+418
+431
+463
 max infected-others
 max-infected-others
 17
@@ -489,10 +470,10 @@ max-infected-others
 11
 
 MONITOR
-359
-573
-503
-618
+147
+418
+291
+463
 variance infected-others
 variance-infected-others
 2
@@ -500,10 +481,10 @@ variance-infected-others
 11
 
 MONITOR
-358
-623
-505
-668
+0
+418
+147
+463
 mean infected-others
 mean-infected-others
 2
