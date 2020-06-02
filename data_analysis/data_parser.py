@@ -26,11 +26,11 @@ def summarize_runs():
     run_no = 1
     n = 0
     while run_no <= 383:
-        metrics_df = pd.read_csv('../raw_data/phase1_results.csv',header = None,skiprows = 6, nrows = 11, usecols =[0, 1+n])
+        metrics_df = pd.read_csv('../raw_data/phase1_results_2.csv',header = None,skiprows = 6, nrows = 11, usecols =[0, 1+n])
         metrics_df.columns = (['metric', 'value'])
         metrics_df
 
-        sim_df = pd.read_csv('../raw_data/phase1_results.csv',header=0,skiprows = 24, nrows = 1564, usecols =[1+n, 2+n, 3+n, 4+n, 5+n, 6+n, 7+n, 8+n, 9+n])
+        sim_df = pd.read_csv('../raw_data/phase1_results_2.csv',header=0,skiprows = 24, nrows = 1564, usecols =[1+n, 2+n, 3+n, 4+n, 5+n, 6+n, 7+n, 8+n, 9+n])
         sim_df = sim_df.reset_index()
         sim_df.columns = (['hour','alive', 'uninfected', 'infected', 'recovered', 'deaths', 'quarantined', 'max_infected', 'variance_infected','mean_infected'])
         sim_df = sim_df[(sim_df['hour'] % 24) == 0].reset_index(drop = True)
@@ -101,7 +101,7 @@ def summarize_runs():
         n += 9
         print(run_no, end=" ")
 
-    runs_df.to_csv('../processed_data/phase1_sim_sum.csv', index = False)
+    runs_df.to_csv('../processed_data/phase1_sim_sum_2.csv', index = False)
 
 def process_raw_runs():
     raw_sim_data = pd.DataFrame(columns = ['day', 'hour', 'alive', 'uninfected', 'infected', 'recovered', 'deaths',
@@ -114,11 +114,11 @@ def process_raw_runs():
     run_no = 1
     n = 0
     while run_no <= 383:
-        metrics_df = pd.read_csv('../raw_data/phase1_results.csv',header = None,skiprows = 6, nrows = 11, usecols =[0, 1+n])
+        metrics_df = pd.read_csv('../raw_data/phase1_results_2.csv',header = None,skiprows = 6, nrows = 11, usecols =[0, 1+n])
         metrics_df.columns = (['metric', 'value'])
         metrics_df
 
-        sim_df = pd.read_csv('../raw_data/phase1_results.csv',header=0,skiprows = 24, nrows = 1564, usecols =[1+n, 2+n, 3+n, 4+n, 5+n, 6+n, 7+n, 8+n, 9+n])
+        sim_df = pd.read_csv('../raw_data/phase1_results_2.csv',header=0,skiprows = 24, nrows = 1564, usecols =[1+n, 2+n, 3+n, 4+n, 5+n, 6+n, 7+n, 8+n, 9+n])
         sim_df = sim_df.reset_index()
         sim_df.columns = (['hour','alive', 'uninfected', 'infected', 'recovered', 'deaths', 'quarantined', 'max_infected', 'variance_infected','mean_infected'])
         sim_df = sim_df[(sim_df['hour'] % 24) == 0].reset_index(drop = True)
@@ -147,6 +147,6 @@ def process_raw_runs():
         n += 9
         print(run_no, end=" ")
         
-    raw_sim_data.to_csv('../processed_data/phase1_sim_raw.csv', index = False)
+    raw_sim_data.to_csv('../processed_data/phase1_sim_raw_2.csv', index = False)
 
     
